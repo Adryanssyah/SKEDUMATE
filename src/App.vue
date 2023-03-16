@@ -7,6 +7,7 @@
 <script setup>
 import { useUserStore } from './stores/user';
 import getJadwal from './composables/getJadwal';
+import 'flowbite/dist/flowbite.js';
 
 const userStore = useUserStore();
 if (userStore.isAuthenticated) {

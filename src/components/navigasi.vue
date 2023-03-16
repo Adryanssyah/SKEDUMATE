@@ -1,22 +1,81 @@
 <template>
-     <div class="w-full flex justify-center border-b-2 py-6 px-5">
-          <div class="w-full max-w-[1100px] flex justify-between items-center">
-               <router-link :to="{ name: 'Home' }">
-                    <img class="w-32" src="../assets/logo/light.png" alt="" />
-               </router-link>
-               <div class="flex justify-between items-center gap-10">
-                    <router-link class="font-medium text-sm" v-show="userStore.isAuthenticated" :to="{ name: 'Dashboard' }">Dashboard</router-link>
-                    <div class="h-8 border-l border-gray-300"></div>
-                    <button><i class="bi bi-brightness-high-fill text-xl"></i></button>
-                    <router-link class="font-medium" v-if="!userStore.isAuthenticated" :to="{ name: 'Login' }">Masuk</router-link>
-                    <button v-show="userStore.isAuthenticated" class="group relative w-9 h-9 flex justify-center items-center text-white text-center cursor-pointer rounded-full" :class="[tema]">
-                         <div class="text-sm uppercase">{{ initials }}</div>
-                         <div class="absolute hidden group-focus:block rounded top-12 right-0 px-5 py-2 bg-white shadow-md border border-gray-200">
-                              <span @click="logout" class="text-black font-medium">Logout</span>
+     <div class="w-full dark:bg-gray-900 flex justify-center py-10 px-5">
+          <nav class="bg-white px-2 sm:px-4 py-2.5 dark:bg-gray-900 fixed w-full z-20 -top-0 left-0 border-b border-gray-200 dark:border-gray-800">
+               <div class="container max-w-[1100px] flex flex-wrap items-center justify-between mx-auto">
+                    <router-link :to="{ name: 'Home' }" class="flex items-center">
+                         <img v-if="isLightMode" src="../assets/logo/l-logo.png" class="h-6 mr-3 sm:h-9" alt="Skedumate" />
+                         <img v-if="!isLightMode" src="../assets/logo/d-logo.png" class="h-6 mr-3 sm:h-9" alt="Skedumate" />
+                    </router-link>
+                    <div class="flex flex-wrap items-center justify-between gap-10">
+                         <div class="flex items-center order-3">
+                              <button
+                                   type="button"
+                                   class="group relative w-9 h-9 flex justify-center items-center text-white text-center cursor-pointer rounded-full"
+                                   id="user-menu-button"
+                                   aria-expanded="false"
+                                   data-dropdown-toggle="user-dropdown"
+                                   data-dropdown-placement="bottom"
+                                   :class="[tema]"
+                                   v-show="userStore.isAuthenticated"
+                              >
+                                   <div class="text-sm uppercase">{{ initials }}</div>
+                                   <span class="sr-only">Open user menu</span>
+                              </button>
+
+                              <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
+                                   <div class="px-4 py-3">
+                                        <span class="block text-sm text-gray-900 dark:text-white">{{ namaLengkap }}</span>
+                                        <span class="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">{{ email }}</span>
+                                   </div>
+                                   <ul class="py-2" aria-labelledby="user-menu-button">
+                                        <li>
+                                             <span @click="logout" class="block cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</span>
+                                        </li>
+                                   </ul>
+                              </div>
+
+                              <button
+                                   data-collapse-toggle="mobile-menu-2"
+                                   type="button"
+                                   class="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                                   aria-controls="mobile-menu-2"
+                                   aria-expanded="false"
+                              >
+                                   <span class="sr-only">Open main menu</span>
+                                   <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                             fill-rule="evenodd"
+                                             d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                                             clip-rule="evenodd"
+                                        ></path>
+                                   </svg>
+                              </button>
                          </div>
-                    </button>
+
+                         <Toggle @toggle="toggleDark" class="order-2" />
+
+                         <div class="items-center justify-between hidden w-full md:flex md:w-auto order-1" id="mobile-menu-2">
+                              <ul
+                                   class="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700"
+                              >
+                                   <li v-if="!userStore.isAuthenticated">
+                                        <router-link :to="{ name: 'Login' }" class="block opacity-50 text-black dark:text-white py-2 pl-3 pr-4 bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0" aria-current="page"
+                                             >Login</router-link
+                                        >
+                                   </li>
+                                   <li>
+                                        <router-link
+                                             v-show="userStore.isAuthenticated"
+                                             :to="{ name: 'Dashboard' }"
+                                             class="block opacity-50 text-black dark:text-white py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent hover:opacity-100 md:p-0 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                                             >Dashboard</router-link
+                                        >
+                                   </li>
+                              </ul>
+                         </div>
+                    </div>
                </div>
-          </div>
+          </nav>
      </div>
 </template>
 
@@ -24,8 +83,8 @@
 import axios from 'axios';
 import { useUserStore } from '../stores/user';
 import { useJadwalStore } from '../stores/jadwal';
+import Toggle from '../components/toggle/dark.vue';
 const userStore = useUserStore();
-const jadwalStore = useJadwalStore();
 </script>
 
 <script>
@@ -33,9 +92,15 @@ export default {
      name: 'navigasi',
      data() {
           return {
-               initials: 'AJ',
+               namaLengkap: '',
+               email: '',
+               initials: '',
                tema: '',
+               isLightMode: true,
           };
+     },
+     components: {
+          Toggle,
      },
      methods: {
           async logout() {
@@ -57,13 +122,29 @@ export default {
                     console.error(error);
                }
           },
+          upperCaseFirtsLetter(text) {
+               return text.charAt(0).toUpperCase() + text.slice(1);
+          },
+
+          toggleDark() {
+               this.isLightMode = !this.isLightMode;
+          },
      },
      created() {
           const userStore = useUserStore();
           this.initials = userStore.setInitials;
+          this.namaLengkap = this.upperCaseFirtsLetter(userStore.user.namaDepan) + ' ' + this.upperCaseFirtsLetter(userStore.user.namaBelakang);
+          this.email = userStore.user.email;
           userStore.isAuthenticated ? (this.tema = userStore.user.tema) : '';
+
+          localStorage.getItem('isLightMode') ? (this.isLightMode = true) : (this.isLightMode = false);
      },
 };
 </script>
 
-<style></style>
+<style>
+.router-link-active {
+     opacity: 1 !important;
+     font-weight: 600;
+}
+</style>

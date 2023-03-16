@@ -1,6 +1,6 @@
 <template>
      <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-30 flex justify-center items-center z-50" @click.self="closeModal">
-          <div class="bg-white p-8 rounded-md flex flex-col">
+          <div class="bg-white dark:bg-gray-800 p-8 rounded-md flex flex-col">
                <div class="flex items-center justify-between mb-8">
                     <h3 class="font-medium text-xl">Buat jadwal baru</h3>
                     <span class="cursor-pointer" @click="closeModal">
@@ -8,7 +8,14 @@
                     </span>
                </div>
                <form @submit.prevent="buatJadwal" class="flex flex-col">
-                    <input type="text" class="w-96 py-3 px-6 rounded-md border border-black text-md" :class="{ 'border-red-500': errors.nama_jadwal }" placeholder="Nama jadwal" name="nama_jadwal" v-model="nama_jadwal" />
+                    <input
+                         type="text"
+                         class="w-96 py-3 px-6 rounded-md border border-black dark:bg-gray-700 dark:border-gray-900 text-md"
+                         :class="{ 'border-red-500 dark:border-red-500': errors.nama_jadwal }"
+                         placeholder="Nama jadwal"
+                         name="nama_jadwal"
+                         v-model="nama_jadwal"
+                    />
                     <div class="text-red-500 text-xs mt-2 flex items-center" v-if="errors.nama_jadwal !== ''"><i class="bi bi-exclamation-circle-fill text-md mr-2"></i> {{ errors.nama_jadwal }}</div>
                     <span class="font-medium text-gray-500 mt-5 mb-4">Jenis Akses</span>
                     <div class="flex items-center gap-1 mb-6">
@@ -17,7 +24,7 @@
                          </span>
                          <div class="flex flex-col">
                               <div class="mb-1">
-                                   <select class="font-medium outline-none cursor-pointer py-1 border-b border-slate-300 mb-1" name="jenis" v-model="jenis">
+                                   <select class="font-medium outline-none cursor-pointer py-2 pr-10 rounded-md border-b border-slate-300 dark:bg-gray-700 dark:border-gray-900 mb-1" name="jenis" v-model="jenis">
                                         <option selected value="public">Kelola bersama</option>
                                         <option value="private">Pribadi</option>
                                    </select>
@@ -31,15 +38,15 @@
                          type="text"
                          :maxlength="8"
                          @input="limitInput"
-                         class="w-96 py-3 tracking-widest rounded-md border border-black text-md text-center"
+                         class="w-96 py-3 tracking-widest rounded-md border border-black text-md text-center dark:bg-gray-700 dark:border-gray-900"
                          placeholder="Set Password"
                          name="pin"
                          v-model="password"
-                         :class="{ 'border-red-500': errors.password }"
+                         :class="{ 'border-red-500 dark:border-red-500': errors.password }"
                     />
                     <div class="text-red-500 text-xs mt-2 flex items-center" v-if="errors.password !== '' && jenis == 'public'"><i class="bi bi-exclamation-circle-fill text-md mr-2"></i> {{ errors.password }}</div>
                     <div class="w-full mt-6 flex justify-end">
-                         <button type="submit" class="bg-black text-white px-4 py-2 rounded-md">Buat <i class="bi bi-arrow-right ml-2"></i></button>
+                         <button type="submit" class="bg-black dark:bg-yellow-400 dark:text-black text-white px-4 py-2 rounded-md">Buat <i class="bi bi-arrow-right ml-2"></i></button>
                     </div>
                </form>
           </div>

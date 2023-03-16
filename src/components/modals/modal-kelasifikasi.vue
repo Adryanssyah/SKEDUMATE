@@ -1,22 +1,22 @@
 <template>
      <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-30 flex justify-center items-center z-50" @click.self="closeModal">
-          <div class="bg-white p-8 rounded-md flex flex-col w-80 md:w-[450px]">
+          <div class="bg-white dark:bg-gray-800 p-8 rounded-md flex flex-col w-80 md:w-[450px]">
                <div class="flex items-center justify-between mb-8">
-                    <h3 class="font-medium text-xl">Modal Kelasifikasi {{ param }}</h3>
+                    <h3 class="font-medium text-xl">Modal Kelasifikasi</h3>
                     <span class="cursor-pointer" @click="closeModal">
                          <i class="bi bi-x-lg"></i>
                     </span>
                </div>
-               <form @submit.prevent="" class="flex flex-col">
+               <form @submit.prevent="tambahKelas" v-if="!loading" class="flex flex-col">
                     <span class="font-medium text-gray-500 mb-4">Daftar kelas</span>
                     <span v-if="daftarKelas.length == 0" class="italic">Kelas Kosong</span>
                     <div v-if="daftarKelas !== null" class="grid grid-cols-2 md:grid-cols-3 gap-2 mb-6">
                          <button v-for="kelas in daftarKelas" :key="kelas" class="group relative rounded-md border border-black flex justify-between gap-1 items-center py-2 px-2">
-                              <div class="flex gap-2 overflow-hidden">
+                              <div class="flex gap-2 overflow-hidden" :title="[kelas.namaKelas]">
                                    <div class="border-r border-gray-300 pr-2">
                                         <div class="border-2 w-5 h-5 rounded-full" :class="[kelas.warna]"></div>
                                    </div>
-                                   <div class="font-medium text-ellipsis text-sm pl-2 overflow-hidden" :title="[kelas.namaKelas]">{{ kelas.namaKelas }}</div>
+                                   <div class="font-medium whitespace-nowrap text-sm pl-2 overflow-hidden">{{ kelas.namaKelas }}</div>
                               </div>
                               <span><i class="bi bi-three-dots-vertical cursor-pointer"></i></span>
                               <div class="absolute bg-white hidden z-40 top-12 right-0 p-3 rounded shadow-md border font-medium text-sm group-focus:flex flex-col text-start">
@@ -57,6 +57,10 @@
                          <button type="submit" class="bg-black text-white px-4 py-2 rounded-md">Simpan <i class="bi bi-arrow-right ml-2"></i></button>
                     </div>
                </form>
+
+               <div v-if="loading" class="w-full text-center py-12">
+                    <Spinner />
+               </div>
           </div>
      </div>
 </template>
@@ -64,13 +68,17 @@
 <script>
 import { ref } from 'vue';
 import useClickOutside from '../../composables/element/detectOutside';
+import Spinner from '../loader/spiner.vue';
+import axios from 'axios';
 export default {
      name: 'modal-kelasifikasi',
      props: ['param'],
+     components: {
+          Spinner,
+     },
      data() {
           return {
                daftarKelas: [],
-
                namaKelas: '',
                errors: {
                     namaKelas: false,
@@ -78,6 +86,7 @@ export default {
                daftarWarna: ['red', 'blue', 'yellow', 'green', 'orange', 'purple', 'amber', 'pink', 'teal', 'indigo'],
                warna: 'border-black',
                pilihWarna: false,
+               loading: true,
           };
      },
      methods: {
@@ -99,7 +108,7 @@ export default {
                if (this.namaKelas !== '') {
                     const kelasBaru = {
                          namaKelas: this.namaKelas,
-                         warna: this.warna,
+                         warna: this.warna[0],
                     };
                     this.namaKelas = '';
                     this.errors.namaKelas = false;
@@ -108,6 +117,24 @@ export default {
                } else {
                     this.errors.namaKelas = true;
                }
+
+               console.log(this.daftarKelas);
+          },
+
+          async tambahKelas() {
+               try {
+                    const response = await axios.post(
+                         'tambah-kelas',
+                         {
+                              id: this.param,
+                              dataKelas: this.daftarKelas,
+                         },
+                         {
+                              withCredentials: true,
+                         }
+                    );
+                    this.$emit('reload');
+               } catch (error) {}
           },
      },
 
@@ -125,6 +152,22 @@ export default {
                node,
                isClickOutside,
           };
+     },
+
+     async mounted() {
+          try {
+               const response = await axios.get('ambil-kelas/' + this.param, {
+                    withCredentials: true,
+               });
+
+               if (response.status == 200) {
+                    this.loading = false;
+               }
+               if (response.data.length != 0) {
+                    this.daftarKelas = response.data;
+               }
+               console.log(response.data);
+          } catch (error) {}
      },
 };
 </script>

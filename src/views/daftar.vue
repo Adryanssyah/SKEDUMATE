@@ -5,14 +5,21 @@
 
                <div class="flex flex-col gap-4 w-full text-sm">
                     <div class="relative">
-                         <input class="text-lg border border-gray-400 py-3 pl-14 w-full rounded-md bg-gray-100" :class="{ 'border-red-500': errors.namaDepan }" type="text" name="namaDepan" placeholder="Nama Depan" v-model="namaDepan" />
+                         <input
+                              class="text-lg border border-gray-400 py-3 pl-14 w-full rounded-md bg-gray-100 dark:bg-gray-700 dark:border-gray-900"
+                              :class="{ 'border-red-500 dark:border-red-500': errors.namaDepan }"
+                              type="text"
+                              name="namaDepan"
+                              placeholder="Nama Depan"
+                              v-model="namaDepan"
+                         />
                          <i class="bi bi-person-fill text-lg text-gray-500 absolute left-5 top-[28%]"></i>
                     </div>
                     <div class="text-red-500 text-xs -mt-2 flex items-center" v-if="errors.namaDepan !== ''"><i class="bi bi-exclamation-circle-fill text-md mr-2"></i>{{ errors.namaDepan }}</div>
                     <div class="relative">
                          <input
-                              class="text-lg border border-gray-400 py-3 pl-14 w-full rounded-md bg-gray-100"
-                              :class="{ 'border-red-500': errors.namaBelakang }"
+                              class="text-lg border border-gray-400 py-3 pl-14 w-full rounded-md bg-gray-100 dark:bg-gray-700 dark:border-gray-900"
+                              :class="{ 'border-red-500 dark:border-red-500': errors.namaBelakang }"
                               type="text"
                               name="namaBelakang"
                               placeholder="Nama Belakang"
@@ -22,23 +29,37 @@
                     </div>
                     <div class="text-red-500 text-xs -mt-2 flex items-center" v-if="errors.namaBelakang !== ''"><i class="bi bi-exclamation-circle-fill text-md mr-2"></i>{{ errors.namaBelakang }}</div>
                     <div class="relative">
-                         <input class="text-lg border border-gray-400 py-3 pl-14 w-full rounded-md bg-gray-100" :class="{ 'border-red-500': errors.email }" type="email" name="email" placeholder="Email" v-model="email" />
+                         <input
+                              class="text-lg border border-gray-400 py-3 pl-14 w-full rounded-md bg-gray-100 dark:bg-gray-700 dark:border-gray-900"
+                              :class="{ 'border-red-500 dark:border-red-500': errors.email }"
+                              type="email"
+                              name="email"
+                              placeholder="Email"
+                              v-model="email"
+                         />
                          <i class="bi bi-envelope-fill text-lg text-gray-500 absolute left-5 top-[28%] p-0"></i>
                     </div>
                     <div class="text-red-500 text-xs -mt-2 flex items-center" v-if="errors.email !== ''"><i class="bi bi-exclamation-circle-fill text-md mr-2"></i>{{ errors.email }}</div>
 
                     <div class="relative">
-                         <input class="text-lg border border-gray-400 py-3 pl-14 w-full rounded-md bg-gray-100" :class="{ 'border-red-500': errors.password }" type="password" name="password" placeholder="Password" v-model="password" />
+                         <input
+                              class="text-lg border border-gray-400 py-3 pl-14 w-full rounded-md bg-gray-100 dark:bg-gray-700 dark:border-gray-900"
+                              :class="{ 'border-red-500 dark:border-red-500': errors.password }"
+                              type="password"
+                              name="password"
+                              placeholder="Password"
+                              v-model="password"
+                         />
                          <i class="bi bi-lock-fill text-lg text-gray-500 absolute left-5 top-[28%]"></i>
                     </div>
                     <div class="text-red-500 text-xs -mt-2 flex items-center" v-if="errors.password !== ''"><i class="bi bi-exclamation-circle-fill text-md mr-2"></i> {{ errors.password }}</div>
                </div>
                <div class="py-4">
-                    <button type="submit" :disabled="isLoading" :class="{ 'bg-gray-800 animate-pulse cursor-not-allowed': isLoading }" class="bg-black text-white px-4 py-2 rounded-md text-lg">
+                    <button type="submit" :disabled="isLoading" :class="{ 'bg-gray-800 animate-pulse cursor-not-allowed': isLoading }" class="bg-black text-white px-4 py-2 rounded-md text-lg dark:bg-yellow-400 dark:text-black">
                          Gabung <i class="bi bi-arrow-right ml-2"></i>
                     </button>
                </div>
-               <div>Sudah memiliki akun? <router-link class="underline font-bold" :to="{ name: 'Login' }">Masuk</router-link></div>
+               <div class="dark:text-gray-300">Sudah punya akun? <router-link :to="{ name: 'Login' }" class="underline font-bold dark:text-white">Masuk</router-link></div>
           </form>
      </div>
 </template>

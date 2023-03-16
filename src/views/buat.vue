@@ -4,13 +4,18 @@
                <div class="flex justify-between items-center mb-10">
                     <h1 class="text-3xl font-semibold">{{ jadwals.nama_jadwal }}</h1>
                     <div class="flex gap-3 whitespace-nowrap">
-                         <button class="w-full text-xs border-2 py-2 px-4 border-black rounded-md hover:bg-black hover:text-white" @click="toggleModal('ModalJadwalKosong', null)">Jadwal Kosong</button>
-                         <button class="group relative w-full text-xs border-2 py-2 px-4 border-black rounded-md">
+                         <button
+                              class="w-full text-xs border-2 py-2 px-4 border-black dark:border-gray-800 dark:hover:bg-yellow-400 dark:bg-gray-800 rounded-md hover:bg-black hover:text-white"
+                              @click="toggleModal('ModalJadwalKosong', null)"
+                         >
+                              Jadwal Kosong
+                         </button>
+                         <button class="group relative w-full text-xs border-2 py-2 px-4 border-black dark:border-gray-800 dark:hover:bg-yellow-400 dark:bg-gray-800 rounded-md">
                               <span>Hari</span>
-                              <div class="absolute hidden flex-col gap-3 bg-white z-50 shadow-md top-10 right-0 border border-gray-200 px-6 py-5 rounded-md text-base font-medium group-focus:flex">
+                              <div class="absolute hidden dark:bg-gray-800 dark:border-gray-900 flex-col gap-3 bg-white z-50 shadow-md top-10 right-0 border border-gray-200 px-6 py-5 rounded-md text-base font-medium group-focus:flex">
                                    <label v-for="(hari, key) in jadwals.hari" :key="key" :for="[key]" class="custom-label cursor-pointer flex items-center gap-3">
                                         <input type="checkbox" :id="[key]" class="hidden" v-model="hari.visible" />
-                                        <span class="w-5 h-5 border border-black rounded flex justify-center items-center custom-check text-white">
+                                        <span class="w-5 h-5 border border-black dark:border-yellow-400 dark:bg-yellow-400 rounded flex justify-center items-center custom-check text-white">
                                              <i class="bi bi-check-lg hidden"></i>
                                         </span>
                                         <span>{{ key }}</span>
@@ -26,7 +31,7 @@
 
           <Setting :toggleModal="toggleModal" :id="jadwals._id" :kelas="jadwals.kelas" />
 
-          <component v-if="showModal" :is="currentModal" :param="param" @close="toggleModal"></component>
+          <component v-if="showModal" :is="currentModal" :param="param" @close="toggleModal" @reload="loadData"></component>
      </div>
 </template>
 
@@ -73,15 +78,25 @@ export default {
                this.currentModal = jenisModal;
                this.param = param;
           },
+          async loadData() {
+               const { loadDetail, error, schedule } = getJadwalDetail(this.id);
+               await loadDetail();
+               this.jadwals = schedule;
+               console.log(this.jadwals.hari.Senin);
+          },
      },
 
-     async created() {
-          const { loadDetail, error, schedule } = getJadwalDetail(this.id);
-          await loadDetail();
-          this.jadwals = schedule;
-          console.log(this.jadwals.hari.Senin);
+     created() {
+          this.loadData();
      },
 };
 </script>
 
-<style></style>
+<style scoped>
+.custom-label input:checked + .custom-check {
+     background-color: black;
+}
+.custom-label input:checked + .custom-check i {
+     display: block !important;
+}
+</style>

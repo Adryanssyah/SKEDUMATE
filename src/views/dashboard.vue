@@ -4,7 +4,7 @@
                <h1 class="font-bold text-2xl">Kegiatan Saya</h1>
                <div class="w-full flex justify-between items-center py-8">
                     <h2 class="font-medium text-xl">Terakhir dilihat</h2>
-                    <button @click="toggleModal('ModalBuat')" class="bg-black text-white px-4 py-2 rounded-md">Buat <i class="bi bi-arrow-right ml-2"></i></button>
+                    <button @click="toggleModal('ModalBuat')" class="bg-black dark:bg-yellow-400 dark:text-black text-white px-4 py-2 rounded-md">Buat <i class="bi bi-arrow-right ml-2"></i></button>
                </div>
                <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-5 grid-cols-1">
                     <Card v-for="(jadwal, index) in jadwals" :key="jadwal.custom_id" :jadwal="jadwal" />
@@ -26,7 +26,7 @@
 
 <script>
 import Card from '../components/cards/d-card.vue';
-import Loader from '../components/loader/d-loader.vue';
+import Loader from '../components/loader/skeleton.vue';
 import ModalBuat from '../components/modals/modal-buat.vue';
 import getJadwal from '../composables/getJadwal';
 import { useJadwalStore } from '../stores/jadwal';

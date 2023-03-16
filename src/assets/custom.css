@@ -15,10 +15,3 @@ body {
 footer {
      margin-top: auto;
 }
-
-.custom-label input:checked + .custom-check {
-     background-color: black !important;
-}
-.custom-label input:checked + .custom-check i {
-     display: block !important;
-}
