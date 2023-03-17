@@ -2,11 +2,11 @@
      <label data-tooltip-target="tooltip-bottom" data-tooltip-placement="bottom" class="relative inline-flex items-center cursor-pointer md:order-2">
           <input type="checkbox" :checked="!isLightMode" class="sr-only peer" @change="toggleMode" />
           <div
-               class="w-11 h-6 bg-gray-200 rounded-full relative peer peer-focus:ring-2 peer-focus:ring-blue-300 dark:peer-focus:ring-gray-600 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-gray-800 after:absolute after:top-0.5 after:left-[2px] after:content-[''] after:bg-white after:dark:bg-gray-800 after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-900 peer-checked:bg-gray-700"
+               class="w-11 h-6 bg-gray-200 rounded-full relative peer peer-focus:ring-2 peer-focus:ring-blue-300 dark:peer-focus:ring-gray-600 dark:bg-dark-2 peer-checked:after:translate-x-full peer-checked:after:border-gray-800 after:absolute after:flex after:justify-center after:items-center text-xs after:pt-0.5 after:dark:text-gray-400 after:top-0.5 after:left-[2px] after:content-['🌞'] dark:after:content-['🌙'] after:bg-white after:dark:bg-dark-2 after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-900 peer-checked:bg-dark-3"
           ></div>
      </label>
 
-     <div id="tooltip-bottom" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+     <div id="tooltip-bottom" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-dark-2">
           Toggle Dark Mode
           <div class="tooltip-arrow" data-popper-arrow></div>
      </div>

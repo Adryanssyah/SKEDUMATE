@@ -1,6 +1,6 @@
 <template>
      <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-30 flex justify-center items-center z-50" @click.self="closeModal">
-          <div class="bg-white dark:bg-gray-800 p-8 rounded-md flex flex-col">
+          <div class="bg-white w-full mx-2 max-w-[450px] dark:bg-dark-2 p-8 rounded-md flex flex-col">
                <div class="flex items-center justify-between mb-8">
                     <h3 class="font-medium text-xl">Buat jadwal baru</h3>
                     <span class="cursor-pointer" @click="closeModal">
@@ -10,7 +10,7 @@
                <form @submit.prevent="buatJadwal" class="flex flex-col">
                     <input
                          type="text"
-                         class="w-96 py-3 px-6 rounded-md border border-black dark:bg-gray-700 dark:border-gray-900 text-md"
+                         class="w-full py-3 px-6 rounded-md border border-black dark:bg-dark-3 dark:text-gray-100 dark:border-gray-900 text-md"
                          :class="{ 'border-red-500 dark:border-red-500': errors.nama_jadwal }"
                          placeholder="Nama jadwal"
                          name="nama_jadwal"
@@ -24,7 +24,11 @@
                          </span>
                          <div class="flex flex-col">
                               <div class="mb-1">
-                                   <select class="font-medium outline-none cursor-pointer py-2 pr-10 rounded-md border-b border-slate-300 dark:bg-gray-700 dark:border-gray-900 mb-1" name="jenis" v-model="jenis">
+                                   <select
+                                        class="font-medium outline-none cursor-pointer w-full py-2 pr-10 rounded-md border-b border-slate-300 border-black dark:bg-dark-3 dark:text-gray-100 dark:border-gray-900 mb-1"
+                                        name="jenis"
+                                        v-model="jenis"
+                                   >
                                         <option selected value="public">Kelola bersama</option>
                                         <option value="private">Pribadi</option>
                                    </select>
@@ -38,7 +42,7 @@
                          type="text"
                          :maxlength="8"
                          @input="limitInput"
-                         class="w-96 py-3 tracking-widest rounded-md border border-black text-md text-center dark:bg-gray-700 dark:border-gray-900"
+                         class="w-full py-3 tracking-widest rounded-md border text-md text-center border-black dark:bg-dark-3 dark:text-gray-100 dark:border-gray-900"
                          placeholder="Set Password"
                          name="pin"
                          v-model="password"

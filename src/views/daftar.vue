@@ -6,7 +6,7 @@
                <div class="flex flex-col gap-4 w-full text-sm">
                     <div class="relative">
                          <input
-                              class="text-lg border border-gray-400 py-3 pl-14 w-full rounded-md bg-gray-100 dark:bg-gray-700 dark:border-gray-900"
+                              class="text-lg border border-gray-400 py-3 pl-14 w-full rounded-md bg-gray-100 dark:bg-dark-2 dark:border-gray-900"
                               :class="{ 'border-red-500 dark:border-red-500': errors.namaDepan }"
                               type="text"
                               name="namaDepan"
@@ -18,7 +18,7 @@
                     <div class="text-red-500 text-xs -mt-2 flex items-center" v-if="errors.namaDepan !== ''"><i class="bi bi-exclamation-circle-fill text-md mr-2"></i>{{ errors.namaDepan }}</div>
                     <div class="relative">
                          <input
-                              class="text-lg border border-gray-400 py-3 pl-14 w-full rounded-md bg-gray-100 dark:bg-gray-700 dark:border-gray-900"
+                              class="text-lg border border-gray-400 py-3 pl-14 w-full rounded-md bg-gray-100 dark:bg-dark-2 dark:border-gray-900"
                               :class="{ 'border-red-500 dark:border-red-500': errors.namaBelakang }"
                               type="text"
                               name="namaBelakang"
@@ -30,7 +30,7 @@
                     <div class="text-red-500 text-xs -mt-2 flex items-center" v-if="errors.namaBelakang !== ''"><i class="bi bi-exclamation-circle-fill text-md mr-2"></i>{{ errors.namaBelakang }}</div>
                     <div class="relative">
                          <input
-                              class="text-lg border border-gray-400 py-3 pl-14 w-full rounded-md bg-gray-100 dark:bg-gray-700 dark:border-gray-900"
+                              class="text-lg border border-gray-400 py-3 pl-14 w-full rounded-md bg-gray-100 dark:bg-dark-2 dark:border-gray-900"
                               :class="{ 'border-red-500 dark:border-red-500': errors.email }"
                               type="email"
                               name="email"
@@ -43,7 +43,7 @@
 
                     <div class="relative">
                          <input
-                              class="text-lg border border-gray-400 py-3 pl-14 w-full rounded-md bg-gray-100 dark:bg-gray-700 dark:border-gray-900"
+                              class="text-lg border border-gray-400 py-3 pl-14 w-full rounded-md bg-gray-100 dark:bg-dark-2 dark:border-gray-900"
                               :class="{ 'border-red-500 dark:border-red-500': errors.password }"
                               type="password"
                               name="password"

@@ -10,34 +10,34 @@
 
 @layer components {
      .red {
-          @apply bg-red-100 border-red-300;
+          @apply bg-red-100 border-red-300 dark:bg-red-300 dark:border-red-500 dark:text-gray-900;
      }
      .blue {
-          @apply bg-blue-100 border-blue-300;
+          @apply bg-blue-100 border-blue-300 dark:bg-blue-300 dark:border-blue-500 dark:text-gray-900;
      }
      .yellow {
-          @apply bg-yellow-100 border-yellow-300;
+          @apply bg-yellow-100 border-yellow-300 dark:bg-yellow-300 dark:border-yellow-500 dark:text-gray-900;
      }
      .green {
-          @apply bg-green-100 border-green-300;
+          @apply bg-green-100 border-green-300 dark:bg-green-300 dark:border-green-500 dark:text-gray-900;
      }
      .orange {
-          @apply bg-orange-100 border-orange-300;
+          @apply bg-orange-100 border-orange-300 dark:bg-orange-300 dark:border-orange-500 dark:text-gray-900;
      }
      .purple {
-          @apply bg-purple-100 border-purple-300;
+          @apply bg-purple-100 border-purple-300 dark:bg-purple-300 dark:border-purple-500 dark:text-gray-900;
      }
-     .amber {
-          @apply bg-amber-100 border-amber-300;
-     }
+     /* .rose {
+          @apply bg-rose-100 border-rose-300 dark:bg-rose-300 dark:border-rose-500 dark:text-gray-900;
+     } */
      .pink {
-          @apply bg-pink-100 border-pink-300;
+          @apply bg-pink-100 border-pink-300 dark:bg-pink-300 dark:border-pink-500 dark:text-gray-900;
      }
      .teal {
-          @apply bg-teal-100 border-teal-300;
+          @apply bg-teal-100 border-teal-300 dark:bg-teal-300 dark:border-teal-500 dark:text-gray-900;
      }
      .indigo {
-          @apply bg-indigo-100 border-indigo-300;
+          @apply bg-indigo-100 border-indigo-300 dark:bg-indigo-300 dark:border-indigo-500 dark:text-gray-900;
      }
 }
 
@@ -60,8 +60,8 @@
      .user-purple {
           @apply bg-purple-500;
      }
-     .user-amber {
-          @apply bg-amber-500;
+     .user-rose {
+          @apply bg-rose-500;
      }
      .user-pink {
           @apply bg-pink-500;

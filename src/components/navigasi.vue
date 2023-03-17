@@ -1,13 +1,13 @@
 <template>
-     <div class="w-full dark:bg-gray-900 flex justify-center py-10 px-5">
-          <nav class="bg-white px-2 sm:px-4 py-2.5 dark:bg-gray-900 fixed w-full z-20 -top-0 left-0 border-b border-gray-200 dark:border-gray-800">
+     <div class="w-full dark:bg-dark flex justify-center py-10 px-5">
+          <nav class="bg-white px-2 sm:px-4 py-2.5 dark:bg-dark fixed w-full z-20 -top-0 left-0 border-b border-gray-200 dark:border-dark-2">
                <div class="container max-w-[1100px] flex flex-wrap items-center justify-between mx-auto">
                     <router-link :to="{ name: 'Home' }" class="flex items-center">
                          <img v-if="isLightMode" src="../assets/logo/l-logo.png" class="h-6 mr-3 sm:h-9" alt="Skedumate" />
                          <img v-if="!isLightMode" src="../assets/logo/d-logo.png" class="h-6 mr-3 sm:h-9" alt="Skedumate" />
                     </router-link>
                     <div class="flex flex-wrap items-center justify-between gap-10">
-                         <div class="flex items-center order-3">
+                         <div class="flex items-center order-3" v-if="userStore.isAuthenticated">
                               <button
                                    type="button"
                                    class="group relative w-9 h-9 flex justify-center items-center text-white text-center cursor-pointer rounded-full"
@@ -22,7 +22,7 @@
                                    <span class="sr-only">Open user menu</span>
                               </button>
 
-                              <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
+                              <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-dark-2 dark:divide-gray-600" id="user-dropdown">
                                    <div class="px-4 py-3">
                                         <span class="block text-sm text-gray-900 dark:text-white">{{ namaLengkap }}</span>
                                         <span class="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">{{ email }}</span>
@@ -52,14 +52,19 @@
                               </button>
                          </div>
 
-                         <Toggle @toggle="toggleDark" class="order-2" />
+                         <div class="order-2 flex">
+                              <Toggle @toggle="toggleDark" />
+                         </div>
 
                          <div class="items-center justify-between hidden w-full md:flex md:w-auto order-1" id="mobile-menu-2">
                               <ul
-                                   class="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700"
+                                   class="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-dark-2 md:dark:bg-dark dark:border-dark-2"
                               >
                                    <li v-if="!userStore.isAuthenticated">
-                                        <router-link :to="{ name: 'Login' }" class="block opacity-50 text-black dark:text-white py-2 pl-3 pr-4 bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0" aria-current="page"
+                                        <router-link
+                                             :to="{ name: 'Login' }"
+                                             class="block opacity-50 text-black dark:text-white py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent hover:opacity-100 md:p-0 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-dark-2"
+                                             aria-current="page"
                                              >Login</router-link
                                         >
                                    </li>
@@ -67,7 +72,7 @@
                                         <router-link
                                              v-show="userStore.isAuthenticated"
                                              :to="{ name: 'Dashboard' }"
-                                             class="block opacity-50 text-black dark:text-white py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent hover:opacity-100 md:p-0 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                                             class="block opacity-50 text-black dark:text-white py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent hover:opacity-100 md:p-0 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-dark-2"
                                              >Dashboard</router-link
                                         >
                                    </li>
@@ -132,10 +137,12 @@ export default {
      },
      created() {
           const userStore = useUserStore();
-          this.initials = userStore.setInitials;
-          this.namaLengkap = this.upperCaseFirtsLetter(userStore.user.namaDepan) + ' ' + this.upperCaseFirtsLetter(userStore.user.namaBelakang);
-          this.email = userStore.user.email;
-          userStore.isAuthenticated ? (this.tema = userStore.user.tema) : '';
+          userStore.isAuthenticated
+               ? ((this.tema = userStore.user.tema),
+                 (this.email = userStore.user.email),
+                 (this.initials = userStore.setInitials),
+                 (this.namaLengkap = this.upperCaseFirtsLetter(userStore.user.namaDepan) + ' ' + this.upperCaseFirtsLetter(userStore.user.namaBelakang)))
+               : '';
 
           localStorage.getItem('isLightMode') ? (this.isLightMode = true) : (this.isLightMode = false);
      },

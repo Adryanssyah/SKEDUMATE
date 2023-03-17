@@ -1,18 +1,18 @@
 <template>
      <div class="max-w-[250px]">
-          <div class="w-full pl-8 border-l-2 border-l-gray-300 dark:border-gray-800 sticky top-10 hidden md:block">
+          <div class="w-full pl-8 border-l-2 border-l-gray-300 dark:border-dark-2 sticky top-10 hidden md:block">
                <h4 class="font-medium text-gray-400">Jenis Akses</h4>
                <div class="my-4">
                     <i class="bi bi-person-fill text-2xl mr-3"></i>
                     <span class="font-medium text-lg">Kelola Bersama</span>
-                    <button @click="toggleModal('ModalJenisAkses', null)" class="w-full text-base border-2 py-2 border-black dark:border-gray-800 dark:hover:bg-yellow-400 dark:bg-gray-800 rounded-md mt-7 hover:bg-black hover:text-white">
+                    <button @click="toggleModal('ModalJenisAkses', null)" class="w-full text-base border-2 py-2 border-black dark:border-dark-2 dark:hover:bg-yellow-400 dark:bg-dark-2 rounded-md mt-7 hover:bg-black hover:text-white">
                          Ubah jenis akses
                     </button>
                </div>
                <h4 class="font-medium text-gray-400 mt-8">Anggota</h4>
                <div class="my-4">
                     <span class="font-medium text-base">Adryan, budi, richard ani ... +8</span>
-                    <button @click="toggleModal('ModalAnggota', null)" class="w-full text-base border-2 py-2 border-black dark:border-gray-800 dark:hover:bg-yellow-400 dark:bg-gray-800 rounded-md mt-7 hover:bg-black hover:text-white">
+                    <button @click="toggleModal('ModalAnggota', null)" class="w-full text-base border-2 py-2 border-black dark:border-dark-2 dark:hover:bg-yellow-400 dark:bg-dark-2 rounded-md mt-7 hover:bg-black hover:text-white">
                          Kelola Anggota
                     </button>
                </div>
@@ -23,7 +23,7 @@
                          <span class="w-3 h-3 rounded-full border" :class="[item.warna]"></span><span>{{ item.namaKelas }}</span>
                     </div>
                </div>
-               <button @click="toggleModal('ModalKelasifikasi', id)" class="w-full text-base border-2 py-2 border-black dark:border-gray-800 dark:hover:bg-yellow-400 dark:bg-gray-800 rounded-md mt-7 hover:bg-black hover:text-white">
+               <button @click="toggleModal('ModalKelasifikasi', id)" class="w-full text-base border-2 py-2 border-black dark:border-dark-2 dark:hover:bg-yellow-400 dark:bg-dark-2 rounded-md mt-7 hover:bg-black hover:text-white">
                     Kelola Kelasifikasi
                </button>
                <h4 class="font-medium text-gray-400 mt-8">Deskripsi</h4>

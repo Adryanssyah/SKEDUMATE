@@ -4,15 +4,12 @@
                <div class="flex justify-between items-center mb-10">
                     <h1 class="text-3xl font-semibold">{{ jadwals.nama_jadwal }}</h1>
                     <div class="flex gap-3 whitespace-nowrap">
-                         <button
-                              class="w-full text-xs border-2 py-2 px-4 border-black dark:border-gray-800 dark:hover:bg-yellow-400 dark:bg-gray-800 rounded-md hover:bg-black hover:text-white"
-                              @click="toggleModal('ModalJadwalKosong', null)"
-                         >
+                         <button class="w-full text-xs border-2 py-2 px-4 border-black dark:border-dark-2 dark:hover:bg-yellow-400 dark:bg-dark-2 rounded-md hover:bg-black hover:text-white" @click="toggleModal('ModalJadwalKosong', null)">
                               Jadwal Kosong
                          </button>
-                         <button class="group relative w-full text-xs border-2 py-2 px-4 border-black dark:border-gray-800 dark:hover:bg-yellow-400 dark:bg-gray-800 rounded-md">
+                         <button class="group relative w-full text-xs border-2 py-2 px-4 border-black dark:border-dark-2 dark:hover:bg-yellow-400 dark:bg-dark-2 rounded-md">
                               <span>Hari</span>
-                              <div class="absolute hidden dark:bg-gray-800 dark:border-gray-900 flex-col gap-3 bg-white z-50 shadow-md top-10 right-0 border border-gray-200 px-6 py-5 rounded-md text-base font-medium group-focus:flex">
+                              <div class="absolute hidden dark:bg-dark-2 dark:border-gray-900 flex-col gap-3 bg-white z-50 shadow-md top-10 right-0 border border-gray-200 px-6 py-5 rounded-md text-base font-medium group-focus:flex">
                                    <label v-for="(hari, key) in jadwals.hari" :key="key" :for="[key]" class="custom-label cursor-pointer flex items-center gap-3">
                                         <input type="checkbox" :id="[key]" class="hidden" v-model="hari.visible" />
                                         <span class="w-5 h-5 border border-black dark:border-yellow-400 dark:bg-yellow-400 rounded flex justify-center items-center custom-check text-white">
