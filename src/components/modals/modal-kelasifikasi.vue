@@ -11,7 +11,13 @@
                     <span class="font-medium text-gray-500 mb-4">Daftar kelas</span>
                     <span v-if="daftarKelas.length == 0" class="italic">Kelas Kosong</span>
                     <div v-if="daftarKelas !== null" class="grid grid-cols-2 md:grid-cols-3 gap-2 mb-6">
-                         <button v-for="kelas in daftarKelas" :key="kelas" class="group relative rounded-md border border-black dark:bg-dark-2 dark:border-gray-500 flex justify-between gap-1 items-center py-2 px-2">
+                         <button
+                              @click.prevent
+                              type="button"
+                              v-for="kelas in daftarKelas"
+                              :key="kelas"
+                              class="group relative rounded-md border border-black dark:bg-dark-2 dark:border-gray-500 flex justify-between gap-1 items-center py-2 px-2"
+                         >
                               <div class="flex gap-2 overflow-hidden" :title="[kelas.namaKelas]">
                                    <div class="border-r border-gray-300 dark:border-gray-500 pr-2">
                                         <div class="border-2 w-5 h-5 rounded-full" :class="[kelas.warna]"></div>
@@ -26,7 +32,7 @@
                          </button>
                     </div>
                     <span class="font-medium text-gray-500 mb-4">Tambah kelas</span>
-                    <div class="flex flex-col max-h-[50px] md:flex-row gap-3 mb-7">
+                    <div v-if="!maxKelas" class="flex flex-col max-h-[50px] md:flex-row gap-3 mb-7">
                          <div class="">
                               <input
                                    type="text"
@@ -36,7 +42,7 @@
                                    name="nama_kelas"
                                    v-model="namaKelas"
                               />
-                              <div class="text-red-500 text-xs flex mt-2 items-center" v-if="errors.namaKelas"><i class="bi bi-exclamation-circle-fill text-md mr-2"></i>Tidak Boleh Kosong</div>
+                              <div class="text-red-500 text-xs flex mt-2 items-center" v-if="errors.namaKelas"><i class="bi bi-exclamation-circle-fill text-md mr-2"></i>{{ errors.pesan }}</div>
                          </div>
                          <div class="w-full grid grid-cols-2 gap-3">
                               <div ref="node" @click="handleClick" class="relative flex items-center justify-center rounded-md border border-black dark:bg-dark-3 dark:text-gray-100 dark:border-gray-900 text-md">
@@ -64,8 +70,10 @@
                          </div>
                     </div>
 
-                    <div class="w-full mt-6 flex justify-end">
-                         <button type="submit" class="bg-black dark:bg-yellow-400 text-white px-4 py-2 rounded-md">Simpan <i class="bi bi-arrow-right ml-2"></i></button>
+                    <div v-if="maxKelas" class="w-full text-center text-sm dark:text-gray-400">Jumlah kelas sudah maksimal</div>
+
+                    <div class="w-full mt-10 flex justify-end">
+                         <button type="submit" class="bg-black dark:bg-yellow-400 dark:text-black text-white px-4 py-2 rounded-md">Simpan <i class="bi bi-arrow-right ml-2"></i></button>
                     </div>
                </form>
 
@@ -79,6 +87,7 @@
 <script>
 import { ref } from 'vue';
 import useClickOutside from '../../composables/element/detectOutside';
+import { useJadwalStore } from '../../stores/jadwal';
 import Spinner from '../loader/spiner.vue';
 import axios from 'axios';
 export default {
@@ -93,12 +102,22 @@ export default {
                namaKelas: '',
                errors: {
                     namaKelas: false,
+                    pesan: '',
                },
                daftarWarna: ['red', 'blue', 'yellow', 'green', 'orange', 'purple', 'rose', 'pink', 'teal', 'indigo'],
                warna: 'border-black',
                pilihWarna: false,
                loading: true,
+               maxKelas: false,
           };
+     },
+     watch: {
+          daftarKelas: {
+               handler: function (newValue, oldValue) {
+                    newValue.length >= 5 ? (this.maxKelas = true) : (this.maxKelas = false);
+               },
+               deep: true,
+          },
      },
      methods: {
           closeModal() {
@@ -117,19 +136,26 @@ export default {
 
           pushKelas() {
                if (this.namaKelas !== '') {
-                    const kelasBaru = {
-                         namaKelas: this.namaKelas,
-                         warna: this.warna[0],
-                    };
-                    this.namaKelas = '';
-                    this.errors.namaKelas = false;
-                    this.warna = 'border-black';
-                    this.daftarKelas.push(kelasBaru);
+                    const result = this.daftarKelas.find((kelas) => kelas.namaKelas === this.namaKelas);
+
+                    if (result) {
+                         this.errors.namaKelas = true;
+                         this.errors.pesan = 'Kelas ' + result.namaKelas + ' sudah ada!';
+                         return;
+                    } else {
+                         const kelasBaru = {
+                              namaKelas: this.namaKelas,
+                              warna: this.warna[0],
+                         };
+                         this.namaKelas = '';
+                         this.errors.namaKelas = false;
+                         this.warna = 'border-black';
+                         this.daftarKelas.push(kelasBaru);
+                    }
                } else {
                     this.errors.namaKelas = true;
+                    this.errors.pesan = 'Tidak Boleh Kosong!';
                }
-
-               console.log(this.daftarKelas);
           },
 
           async tambahKelas() {
@@ -144,8 +170,14 @@ export default {
                               withCredentials: true,
                          }
                     );
-                    this.$emit('reload');
-               } catch (error) {}
+                    if (response.status == 200) {
+                         const jadwalStore = useJadwalStore();
+                         jadwalStore.kelas = this.daftarKelas;
+                         console.log(jadwalStore.kelas);
+                    }
+               } catch (error) {
+                    console.error(error);
+               }
           },
      },
 
@@ -177,8 +209,9 @@ export default {
                if (response.data.length != 0) {
                     this.daftarKelas = response.data;
                }
-               console.log(response.data);
-          } catch (error) {}
+          } catch (error) {
+               console.error('error nih bro: ' + error);
+          }
      },
 };
 </script>

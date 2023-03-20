@@ -67,8 +67,6 @@ export default {
                this.jadwals = jadwalStore.jadwal;
           }
 
-          console.log(this.jadwals);
-
           watchEffect(() => {
                if (this.jadwals.value !== null) {
                     this.loading = false;

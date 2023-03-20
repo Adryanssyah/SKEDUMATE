@@ -3,13 +3,12 @@
           <div class="w-full md:pr-8 pr-0">
                <div class="flex justify-between items-center mb-10">
                     <h1 class="text-3xl font-semibold">{{ jadwals.nama_jadwal }}</h1>
-                    <div class="flex gap-3 whitespace-nowrap">
-                         <button class="w-full text-xs border-2 py-2 px-4 border-black dark:border-dark-2 dark:hover:bg-yellow-400 dark:bg-dark-2 rounded-md hover:bg-black hover:text-white" @click="toggleModal('ModalJadwalKosong', null)">
-                              Jadwal Kosong
-                         </button>
-                         <button class="group relative w-full text-xs border-2 py-2 px-4 border-black dark:border-dark-2 dark:hover:bg-yellow-400 dark:bg-dark-2 rounded-md">
+               </div>
+               <div class="flex gap-3 whitespace-nowrap mb-10 justify-between">
+                    <div class="flex gap-3">
+                         <button class="group relative text-xs border-2 py-2 px-4 border-black dark:border-dark-2 dark:hover:bg-yellow-400 dark:bg-dark-2 rounded-md">
                               <span>Hari</span>
-                              <div class="absolute hidden dark:bg-dark-2 dark:border-gray-900 flex-col gap-3 bg-white z-50 shadow-md top-10 right-0 border border-gray-200 px-6 py-5 rounded-md text-base font-medium group-focus:flex">
+                              <div class="absolute hidden dark:bg-dark-2 dark:border-gray-900 flex-col gap-3 bg-white z-50 shadow-md top-10 left-0 border border-gray-200 px-6 py-5 rounded-md text-base font-medium group-focus:flex">
                                    <label v-for="(hari, key) in jadwals.hari" :key="key" :for="[key]" class="custom-label cursor-pointer flex items-center gap-3">
                                         <input type="checkbox" :id="[key]" class="hidden" v-model="hari.visible" />
                                         <span class="w-5 h-5 border border-black dark:border-yellow-400 dark:bg-yellow-400 rounded flex justify-center items-center custom-check text-white">
@@ -19,13 +18,27 @@
                                    </label>
                               </div>
                          </button>
+
+                         <button class="text-xs border-2 py-2 px-4 border-black dark:border-dark-2 dark:hover:bg-yellow-400 dark:bg-dark-2 rounded-md hover:bg-black hover:text-white" @click="toggleModal('ModalJadwalKosong', id)">
+                              Jadwal Kosong
+                         </button>
+                    </div>
+
+                    <div>
+                         <button
+                              data-tooltip-target="tooltip-btn-setting"
+                              data-tooltip-placement="bottom"
+                              class="relative text-xs border-2 py-2 px-4 border-black dark:border-dark-2 dark:hover:bg-yellow-400 dark:bg-dark-2 rounded-md hover:bg-black hover:text-white"
+                         >
+                              <i class="bi bi-gear-fill"></i>
+                         </button>
+                         <Tooltip title="Toggle Setting" ids="tooltip-btn-setting" />
                     </div>
                </div>
-               <div v-for="(hari, key) in jadwals.hari" :key="key">
-                    <Hari v-if="hari.visible" :namaHari="key" :kegiatanHari="hari.kegiatan" :toggleModal="toggleModal" />
+               <div class="w-full" v-for="(hari, key) in jadwals.hari" :key="key">
+                    <Hari v-if="hari.visible" :namaHari="key" :kegiatanHari="hari.kegiatan" :kelas="jadwals.kelas" :toggleModal="toggleModal" />
                </div>
           </div>
-
           <Setting :toggleModal="toggleModal" :id="jadwals._id" :kelas="jadwals.kelas" />
 
           <component v-if="showModal" :is="currentModal" :param="param" @close="toggleModal" @reload="loadData"></component>
@@ -40,8 +53,10 @@ import ModalAnggota from '../components/modals/modal-anggota.vue';
 import ModalJenisAkses from '../components/modals/modal-jenis-akses.vue';
 import Hari from '../components/hari.vue';
 import Setting from '../components/setting.vue';
+import Tooltip from '../components/tooltip/tooltip.vue';
 import getJadwalDetail from '../composables/getJadwalDetail';
 import { ref } from 'vue';
+import { useJadwalStore } from '../stores/jadwal';
 export default {
      name: 'Buat',
      props: ['id'],
@@ -53,6 +68,7 @@ export default {
           ModalJadwalKosong,
           ModalAnggota,
           ModalJenisAkses,
+          Tooltip,
      },
      data() {
           return {
@@ -79,7 +95,8 @@ export default {
                const { loadDetail, error, schedule } = getJadwalDetail(this.id);
                await loadDetail();
                this.jadwals = schedule;
-               console.log(this.jadwals.hari.Senin);
+               const jadwalStore = useJadwalStore();
+               jadwalStore.kelas = this.jadwals.kelas;
           },
      },
 

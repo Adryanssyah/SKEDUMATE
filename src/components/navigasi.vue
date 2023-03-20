@@ -122,7 +122,7 @@ export default {
                     const jadwalStore = useJadwalStore();
                     userStore.$reset();
                     jadwalStore.$reset();
-                    this.$router.push({ name: 'Login' });
+                    this.$router.push({ name: 'Home' });
                } catch (error) {
                     console.error(error);
                }

@@ -16,9 +16,9 @@
                          Kelola Anggota
                     </button>
                </div>
-               <h4 class="font-medium text-gray-400 mt-8">Kelasifikasi</h4>
-               <div v-if="kelas.length == 0" class="mt-4 italic">Tidak ada kelas</div>
-               <div v-if="kelas.length !== 0" class="my-4">
+               <h4 class="font-medium text-gray-400 mt-8">Kelasifikasi ({{ kelas.length }})</h4>
+               <div v-if="kelas && kelas.length === 0" class="mt-4 italic">Tidak ada kelas</div>
+               <div v-if="kelas && kelas.length !== 0" class="my-4">
                     <div v-for="(item, index) in kelas" :key="index" class="font-medium text-base flex items-center gap-3">
                          <span class="w-3 h-3 rounded-full border" :class="[item.warna]"></span><span>{{ item.namaKelas }}</span>
                     </div>
@@ -34,9 +34,21 @@
      </div>
 </template>
 
+<script setup>
+import { useJadwalStore } from '../stores/jadwal';
+import { computed } from 'vue';
+const jadwalStore = useJadwalStore();
+const kelas = computed(() => jadwalStore.kelas);
+</script>
+
 <script>
 export default {
      name: 'setting',
+     data() {
+          return {
+               kelas: null,
+          };
+     },
      props: {
           toggleModal: {
                type: Function,
@@ -46,12 +58,6 @@ export default {
                type: String,
                required: true,
           },
-          kelas: {
-               type: Array,
-          },
-     },
-     mounted() {
-          console.log(this.kelas);
      },
 };
 </script>
