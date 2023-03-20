@@ -19,9 +19,16 @@
      <div class="w-full flex flex-col justify-center items-center px-5">
           <Loader v-if="loading" />
      </div>
-     <keep-alive>
-          <component v-if="showModal" :is="currentModal" @close="toggleModal" @update="updateJadwal"></component>
-     </keep-alive>
+
+     <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" enter-active-class="transition-all duration-300" leave-active-class="transition-all duration-300" name="modal-backdrop">
+          <div v-show="showModal" class="fixed top-0 left-0 w-full py-5 h-full bg-black bg-opacity-70 flex justify-center items-center z-50" @click.self="closeModal">
+               <Transition enter-active-class="transition-all duration-300" leave-active-class="transition-all duration-300" enter-from-class="transform scale-0" leave-to-class="transform scale-0" name="modal">
+                    <keep-alive>
+                         <component v-if="showModal" :is="currentModal" @close="toggleModal" @update="updateJadwal"></component>
+                    </keep-alive>
+               </Transition>
+          </div>
+     </Transition>
 </template>
 
 <script>
@@ -57,6 +64,9 @@ export default {
           updateJadwal(jadwalBaru) {
                this.jadwals.push(jadwalBaru);
           },
+          closeModal() {
+               this.showModal = false;
+          },
      },
      async created() {
           const { loadJadwal } = getJadwal();
@@ -76,4 +86,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped></style>
