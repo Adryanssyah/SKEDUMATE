@@ -35,8 +35,8 @@
                          <Tooltip title="Toggle Setting" ids="tooltip-btn-setting" />
                     </div>
                </div>
-               <div class="w-full" v-for="(hari, key) in jadwals.hari" :key="key">
-                    <Hari v-if="hari.visible" :namaHari="key" :kegiatanHari="hari.kegiatan" :kelas="jadwals.kelas" :toggleModal="toggleModal" />
+               <div v-for="(hari, key) in kegiatan" :key="key">
+                    <Hari v-if="hari.visible" :id="jadwals._id" :namaHari="key" :kegiatanHari="hari.kegiatan" :kelas="jadwals.kelas" :toggleModal="toggleModal" />
                </div>
           </div>
           <Setting :toggleModal="toggleModal" :id="jadwals._id" :kelas="jadwals.kelas" />
@@ -55,7 +55,7 @@ import Hari from '../components/hari.vue';
 import Setting from '../components/setting.vue';
 import Tooltip from '../components/tooltip/tooltip.vue';
 import getJadwalDetail from '../composables/getJadwalDetail';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useJadwalStore } from '../stores/jadwal';
 export default {
      name: 'Buat',
@@ -92,16 +92,25 @@ export default {
                this.param = param;
           },
           async loadData() {
-               const { loadDetail, error, schedule } = getJadwalDetail(this.id);
+               const { loadDetail, schedule } = getJadwalDetail(this.id);
                await loadDetail();
                this.jadwals = schedule;
                const jadwalStore = useJadwalStore();
                jadwalStore.kelas = this.jadwals.kelas;
+               jadwalStore.kegiatan = this.jadwals.hari;
           },
      },
 
      created() {
           this.loadData();
+     },
+
+     setup() {
+          const jadwalStore = useJadwalStore();
+          const kegiatan = computed(() => jadwalStore.kegiatan);
+          return {
+               kegiatan,
+          };
      },
 };
 </script>

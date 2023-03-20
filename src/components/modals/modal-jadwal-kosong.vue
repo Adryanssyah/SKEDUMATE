@@ -12,23 +12,17 @@
                          <li class="mr-2">
                               <a href="#" class="inline-block p-4 text-black border-b-2 border-black rounded-t-lg dark:text-white dark:border-white" aria-current="page">Semua</a>
                          </li>
-                         <li class="mr-2">
-                              <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">R001</a>
-                         </li>
-
-                         <li class="mr-2">
-                              <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">R002</a>
-                         </li>
-                         <li class="mr-2">
-                              <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">R003</a>
+                         <li v-for="(item, index) in kelas" :key="index" class="mr-2">
+                              <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">{{ item.namaKelas }}</button>
                          </li>
                     </ul>
                </div>
                <div class="md:w-full max-h-[1000px] overflow-y-auto">
-                    <div class="w-full py-5" v-for="(jadwals, index) in jadwalKosong" :key="index">
-                         <h4 class="font-semibold text-lg mb-5 mt-5">{{ index }}</h4>
-                         <div class="flex gap-3 flex-wrap whitespace-nowrap">
-                              <div v-for="(jadwal, index) in jadwals" :key="index" class="border-2 text-center green rounded-md px-6 py-2">{{ jadwal }}</div>
+                    <div class="w-full py-5 flex flex-col gap-4 items-center" v-for="(jadwals, namaHari) in jadwalKosong" :key="namaHari">
+                         <h4 class="font-semibold text-lg mb-5 mt-5">{{ namaHari }}</h4>
+                         <div class="flex gap-3 flex-wrap whitespace-nowrap justify-center">
+                              <div v-if="jadwals != ''" v-for="(jadwal, index) in jadwals" :key="index" class="border-2 font-semibold text-center green rounded-md px-6 py-2">{{ jadwal }}</div>
+                              <div v-if="jadwals == ''" class="">Hari {{ namaHari }} penuh</div>
                          </div>
                     </div>
                </div>
@@ -37,6 +31,7 @@
 </template>
 
 <script>
+import { useJadwalStore } from '../../stores/jadwal';
 import axios from 'axios';
 export default {
      name: 'modal-jadwal-kosong',
@@ -62,6 +57,14 @@ export default {
           } catch (error) {
                console.log(error);
           }
+     },
+
+     setup() {
+          const jadwalStore = useJadwalStore();
+          const kelas = jadwalStore.kelas;
+          return {
+               kelas,
+          };
      },
 };
 </script>

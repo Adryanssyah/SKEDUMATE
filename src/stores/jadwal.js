@@ -6,6 +6,7 @@ export const useJadwalStore = defineStore({
      state: () => ({
           jadwal: ref(null),
           kelas: null,
+          kegiatan: null,
      }),
      actions: {
           loadJadwal() {

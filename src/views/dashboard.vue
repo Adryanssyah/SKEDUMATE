@@ -13,7 +13,7 @@
           <div v-if="jadwals.length == 0" class="py-[13%] w-full max-w-[1100px] flex flex-col justify-center items-center text-center gap-2">
                <h2 class="font-medium text-2xl">Kamu belum memiliki jadwal.</h2>
                <p class="text-gray-400 font-medium">Klik tombol di bawah untuk memulai</p>
-               <button @click="toggleModal('ModalBuat')" class="bg-black text-white px-4 py-2 mt-4 rounded-md">Buat <i class="bi bi-arrow-right ml-2"></i></button>
+               <button @click="toggleModal('ModalBuat')" class="bg-black dark:bg-yellow-400 dark:text-black text-white px-4 py-2 mt-4 rounded-md">Buat <i class="bi bi-arrow-right ml-2"></i></button>
           </div>
      </div>
      <div class="w-full flex flex-col justify-center items-center px-5">

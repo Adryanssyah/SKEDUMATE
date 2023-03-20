@@ -173,7 +173,7 @@ export default {
                     if (response.status == 200) {
                          const jadwalStore = useJadwalStore();
                          jadwalStore.kelas = this.daftarKelas;
-                         console.log(jadwalStore.kelas);
+                         jadwalStore.kegiatan = jadwalStore.kegiatan;
                     }
                } catch (error) {
                     console.error(error);
