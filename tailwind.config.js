@@ -10,5 +10,5 @@ module.exports = {
           },
           extend: {},
      },
-     plugins: [require('@tailwindcss/line-clamp'), require('flowbite/plugin')],
+     plugins: [require('@tailwindcss/line-clamp'), require('flowbite/plugin'), require('tailwind-scrollbar')({ nocompatible: true })],
 };

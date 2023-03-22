@@ -2,14 +2,20 @@
      <div class="w-full mb-8 pb-8 border-b-2 border-l-gray-100 dark:border-dark-2 overflow-y-auto">
           <h3 class="font-medium text-2xl text-gray-500">{{ namaHari }}</h3>
           <div class="flex flex-wrap gap-5 mt-8 cursor-pointer whitespace-nowrap">
-               <button v-if="kegiatanHari.length !== 0" v-for="kegiatan in kegiatanHari" :key="kegiatan.title" class="group h-[43.2px] flex flex-col py-2 px-4 focus:h-auto rounded-md border-2" :class="getKelasWarna(kegiatan.kelas)">
+               <button
+                    v-if="kegiatanHari.length !== 0"
+                    v-for="kegiatan in kegiatanHari.sort((a, b) => a.start.localeCompare(b.start))"
+                    :key="kegiatan.title"
+                    class="group h-[43.2px] flex flex-col py-2 px-4 focus:h-auto rounded-md border-2"
+                    :class="getKelasWarna(kegiatan.kelas)"
+               >
                     <div class="flex items-center">
                          <span class="font-semibold">{{ kegiatan.start }} - {{ kegiatan.end }}</span>
                          <span class="mx-4"> | </span>
                          <span class="font-medium">{{ kegiatan.title }}</span>
                     </div>
                     <div class="hidden justify-between w-full items-center border-t border-gray-100 dark:border-gray-500 mt-4 pt-4 group-focus:flex">
-                         <div class="flex flex-col items-start">
+                         <div v-if="kegiatan.kelas != ''" class="flex flex-col items-start">
                               <span class="text-xs mb-1">Kelas</span>
                               <span class="font-medium">{{ kegiatan.kelas }}</span>
                          </div>

@@ -1,6 +1,5 @@
 import { useUserStore } from '../stores/user';
 import axios from 'axios';
-const sessionId = 'justRandom';
 
 const checkSession = () => {
      const load = async () => {

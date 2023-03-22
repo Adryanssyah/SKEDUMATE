@@ -18,6 +18,7 @@ export default {
      data() {
           return {
                isLightMode: true,
+               dark: 'dark',
           };
      },
      methods: {
@@ -28,9 +29,9 @@ export default {
           },
           loadMode() {
                if (localStorage.getItem('isLightMode')) {
-                    document.documentElement.classList.remove('dark');
+                    document.documentElement.classList.remove(this.dark);
                } else {
-                    document.documentElement.classList.add('dark');
+                    document.documentElement.classList.add(this.dark);
                }
                this.isLightMode = localStorage.getItem('isLightMode');
           },

@@ -62,7 +62,14 @@
                     </label>
                </div>
                <div class="w-full mt-6 flex justify-end">
-                    <button type="submit" class="bg-black dark:bg-yellow-400 dark:text-black text-white px-4 py-2 rounded-md">Simpan <i class="bi bi-arrow-right ml-2"></i></button>
+                    <button
+                         type="submit"
+                         :disabled="isloading"
+                         :class="{ 'bg-black dark:bg-yellow-400 dark:text-black text-white': !isloading, 'bg-gray-400 dark:bg-gray-600 dark:text-black text-white cursor-not-allowed': isloading }"
+                         class="px-4 py-2 rounded-md flex gap-3"
+                    >
+                         <span>{{ isloading ? 'Meyimpan ...' : 'Simpan' }}</span> <i v-if="!isloading" class="bi bi-arrow-right ml-2"></i>
+                    </button>
                </div>
           </form>
      </div>
@@ -93,6 +100,7 @@ export default {
                     start: '',
                     end: '',
                },
+               isloading: false,
           };
      },
 
@@ -109,42 +117,56 @@ export default {
                this.$emit('close');
           },
 
-          async tambahKegiatan() {
-               const response = await axios.post(
-                    'tambah-kegiatan',
-                    {
-                         id: this.param.id,
-                         start: this.mulai,
-                         end: this.selesai,
-                         title: this.namaKegiatan,
-                         kelas: this.kelases,
-                         hari: this.param.namaHari,
-                    },
-                    {
-                         withCredentials: true,
-                    }
-               );
+          toggleToast(title, type) {
+               this.$emit('toast', { title, type });
+          },
 
-               if (response.data.errors) {
-                    this.errors = response.data.errors.reduce(
-                         (acc, error) => {
-                              acc[error.param] = error.msg;
-                              return acc;
+          async tambahKegiatan() {
+               this.isloading = true;
+               try {
+                    const response = await axios.post(
+                         'tambah-kegiatan',
+                         {
+                              id: this.param.id,
+                              start: this.mulai,
+                              end: this.selesai,
+                              title: this.namaKegiatan,
+                              kelas: this.kelases,
+                              hari: this.param.namaHari,
                          },
                          {
-                              title: '',
-                              start: '',
-                              end: '',
+                              withCredentials: true,
                          }
                     );
-                    console.log(this.errors);
-                    return this.errors;
-               }
 
-               if (response.status == 200) {
-                    const jadwalStore = useJadwalStore();
-                    jadwalStore.kegiatan[this.hari] = response.data.hari[this.hari];
-                    this.$emit('close');
+                    if (response.data.errors) {
+                         this.errors = response.data.errors.reduce(
+                              (acc, error) => {
+                                   acc[error.param] = error.msg;
+                                   return acc;
+                              },
+                              {
+                                   title: '',
+                                   start: '',
+                                   end: '',
+                              }
+                         );
+                         this.isloading = false;
+                         return this.errors;
+                    }
+
+                    if (response.status == 200) {
+                         const jadwalStore = useJadwalStore();
+                         jadwalStore.kegiatan[this.hari] = response.data.hari[this.hari];
+                         this.toggleToast('Berhasil menambahkan kegiatan baru', 'success');
+                         (this.isloading = false), this.$emit('close');
+                    } else if (response.status == 500) {
+                         this.isloading = false;
+                         this.toggleToast('Server sedang mengalami gangguan', 'error');
+                    }
+               } catch (error) {
+                    this.toggleToast(error.message, 'error');
+                    this.isloading = false;
                }
           },
      },
