@@ -4,11 +4,11 @@
                <div class="flex justify-between items-center mb-10">
                     <h1 class="text-3xl font-semibold">{{ jadwals.nama_jadwal }}</h1>
                </div>
-               <div class="flex gap-3 flex-wrap overflow-hidden whitespace-nowrap mb-10 justify-between">
+               <div class="flex gap-3 flex-wrap whitespace-nowrap mb-10 justify-between">
                     <div class="flex flex-wrap gap-3">
                          <button class="group relative text-xs border-2 py-2 px-4 border-black dark:border-dark-2 dark:hover:bg-yellow-400 dark:bg-dark-2 rounded-md">
                               <span>Hari</span>
-                              <div class="absolute hidden dark:bg-dark-2 dark:border-gray-900 flex-col gap-3 bg-white z-50 shadow-md top-10 left-0 border border-gray-200 px-6 py-5 rounded-md text-base font-medium group-focus:flex">
+                              <div class="absolute hidden group-focus:flex dark:bg-dark-2 dark:border-gray-900 flex-col gap-3 bg-white z-50 shadow-md top-10 left-0 border border-gray-200 px-6 py-5 rounded-md text-base font-medium">
                                    <label v-for="(hari, key) in jadwals.hari" :key="key" :for="[key]" class="custom-label cursor-pointer flex items-center gap-3">
                                         <input type="checkbox" :id="[key]" class="hidden" v-model="hari.visible" />
                                         <span class="w-5 h-5 border border-black dark:border-yellow-400 dark:bg-yellow-400 rounded flex justify-center items-center custom-check text-white">
@@ -25,7 +25,7 @@
                     </div>
 
                     <transition enter-active-class="transition-all duration-300" enter-from-class="transform scale-0">
-                         <div v-if="!settingVisible" class="relative">
+                         <div v-if="!settingVisible" class="relative overflow-hidden">
                               <button
                                    @click="toggleSetting"
                                    data-tooltip-target="tooltip-btn-setting"
@@ -47,8 +47,8 @@
 
           <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" enter-active-class="transition-all duration-300" leave-active-class="transition-all duration-300" name="modal-backdrop">
                <div v-show="showModal" class="fixed top-0 left-0 w-full py-5 h-full bg-black bg-opacity-70 flex justify-center items-center z-50" @click.self="closeModal">
-                    <Transition enter-active-class="transition-all duration-300" leave-active-class="transition-all duration-300" enter-from-class="transform scale-0" leave-to-class="transform scale-0" name="modal">
-                         <component v-show="showModal" :is="currentModal" :param="param" @close="closeModal" @reload="loadData" @toast="toggleToast"></component>
+                    <Transition enter-active-class="transition-all duration-300 " leave-active-class="transition-all duration-300 " enter-from-class="transform scale-0" leave-to-class="transform scale-0" name="modal">
+                         <component v-if="showModal" :is="currentModal" :param="param" @close="closeModal" @reload="loadData" @toast="toggleToast"></component>
                     </Transition>
                </div>
           </Transition>
@@ -59,9 +59,11 @@
 
 <script>
 import ModalTambahHari from '../components/modals/modal-tambah-hari.vue';
+import ModalEditKegiatan from '../components/modals/modal-edit-kegiatan.vue';
 import ModalKelasifikasi from '../components/modals/modal-kelasifikasi.vue';
 import ModalJadwalKosong from '../components/modals/modal-jadwal-kosong.vue';
 import ModalAnggota from '../components/modals/modal-anggota.vue';
+import ModalHapus from '../components/modals/modal-hapus.vue';
 import ModalJenisAkses from '../components/modals/modal-jenis-akses.vue';
 import Hari from '../components/hari.vue';
 import Setting from '../components/setting.vue';
@@ -76,7 +78,9 @@ export default {
      components: {
           Hari,
           Setting,
+          ModalHapus,
           ModalTambahHari,
+          ModalEditKegiatan,
           ModalKelasifikasi,
           ModalJadwalKosong,
           ModalAnggota,

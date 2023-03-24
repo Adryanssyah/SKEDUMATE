@@ -23,7 +23,7 @@ export default {
      name: 'toast',
      data() {
           return {
-               duration: 2000,
+               duration: 2300,
           };
      },
 

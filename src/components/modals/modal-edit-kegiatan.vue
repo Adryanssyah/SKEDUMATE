@@ -1,14 +1,14 @@
 <template>
      <div class="bg-white w-full mx-2 max-w-[450px] dark:bg-dark-2 p-8 rounded-md flex flex-col">
           <div class="flex items-center justify-between mb-8">
-               <h3 class="font-medium text-xl">Kegiatan</h3>
+               <h3 class="font-medium text-xl">Edit Kegiatan</h3>
                <span class="cursor-pointer" @click="closeModal">
                     <i class="bi bi-x-lg"></i>
                </span>
           </div>
-          <form @submit.prevent="tambahKegiatan" class="flex flex-col gap-5">
+          <form @submit.prevent="simpanData" class="flex flex-col gap-5">
                <div class="w-full flex justify-end">
-                    hari <strong class="ml-1">{{ param.namaHari }}</strong>
+                    hari <strong class="ml-1">{{ dataJadwal.hari }}</strong>
                </div>
                <input
                     type="text"
@@ -16,7 +16,7 @@
                     :class="{ 'border-red-500 dark:border-red-500': errors.title && dataKegiatan.title == '', 'border-black': !errors.title, 'border-black': errors.title && dataKegiatan.title != '' }"
                     placeholder="Nama Kegiatan"
                     name="nama_kegiatan"
-                    v-model="dataKegiatan.title"
+                    v-model="param.kegiatan.title"
                />
                <div class="text-red-500 text-xs -mt-3 flex items-center" v-if="errors.title && dataKegiatan.title == ''"><i class="bi bi-exclamation-circle-fill text-md mr-2"></i>{{ errors.title }}</div>
                <div class="w-full flex gap-5">
@@ -28,7 +28,7 @@
                               :class="{ 'border-red-500 dark:border-red-500': errors.start && dataKegiatan.start == '', 'border-black': !errors.start, 'border-black': errors.start && dataKegiatan.start != '' }"
                               placeholder="Nama Kegiatan"
                               id="jam_start"
-                              v-model="dataKegiatan.start"
+                              v-model="param.kegiatan.start"
                          />
                          <div class="text-red-500 text-xs mt-2 flex items-center" v-if="errors.start && dataKegiatan.start == ''"><i class="bi bi-exclamation-circle-fill text-md mr-2"></i>{{ errors.start }}</div>
                     </div>
@@ -40,12 +40,12 @@
                               :class="{ 'border-red-500 dark:border-red-500': errors.end && dataKegiatan.end == '', 'border-black': !errors.end, 'border-black': errors.end && dataKegiatan.end != '' }"
                               placeholder="Nama Kegiatan"
                               id="jam_end"
-                              v-model="dataKegiatan.end"
+                              v-model="param.kegiatan.end"
                          />
                          <div class="text-red-500 text-xs mt-2 flex items-center" v-if="errors.end && dataKegiatan.end == ''"><i class="bi bi-exclamation-circle-fill text-md mr-2"></i>{{ errors.end }}</div>
                     </div>
                </div>
-               <span class="font-medium text-gray-500">Pilih kelas </span>
+               <span class="font-medium text-gray-500">Pilih kelas</span>
                <div class="w-full flex gap-3 flex-wrap">
                     <label
                          for="none"
@@ -69,7 +69,7 @@
                          }"
                     >
                          <span class="w-4 h-4 rounded-full border" :class="[item.warna]"></span> {{ item.namaKelas }}
-                         <input @change="pilihKelas" class="hidden" type="radio" name="kelas" :id="[item.namaKelas]" :value="[item.namaKelas]" v-model="dataKegiatan.kelas" />
+                         <input @change="pilihKelas" class="hidden" type="radio" name="kelas" :id="[item.namaKelas]" :value="[item.namaKelas]" v-model="param.kegiatan.kelas" />
                     </label>
                </div>
                <div class="w-full mt-6 flex justify-end">
@@ -86,41 +86,40 @@
      </div>
 </template>
 
-<script setup>
-import { useJadwalStore } from '../../stores/jadwal';
-import { computed } from 'vue';
-const jadwalStore = useJadwalStore();
-const kelases = computed(() => jadwalStore.kelas);
-</script>
-
 <script>
 import { useJadwalStore } from '../../stores/jadwal';
 import axios from 'axios';
 export default {
-     name: 'modal-tambah-hari',
+     name: 'modal-edit-kegiatan',
      props: ['param'],
      data() {
           return {
-               dataKegiatan: { _id: this.param.id, start: '', end: '', title: '', kelas: '', hari: this.param.namaHari },
+               dataJadwal: {
+                    _id: this.param.dataJadwal.id,
+                    hari: this.param.dataJadwal.namaHari,
+               },
+               dataKegiatan: {},
                errors: {
                     title: '',
                     start: '',
                     end: '',
                },
                isloading: false,
+               kelases: '',
           };
      },
 
      watch: {
-          'dataKegiatan.start': function (newValue, oldValue) {
-               this.dataKegiatan.start > this.dataKegiatan.end && this.dataKegiatan.end != '' ? (this.dataKegiatan.start = this.dataKegiatan.end) : '';
+          'param.kegiatan.start': function (newValue, oldValue) {
+               this.param.kegiatan.start > this.param.kegiatan.end && this.param.kegiatan.end != '' ? (this.param.kegiatan.start = this.param.kegiatan.end) : '';
           },
-          'dataKegiatan.end': function (newValue, oldValue) {
-               this.dataKegiatan.start > this.dataKegiatan.end && this.dataKegiatan.start != '' ? (this.dataKegiatan.end = this.dataKegiatan.start) : '';
+          'param.kegiatan.end': function (newValue, oldValue) {
+               this.param.kegiatan.start > this.param.kegiatan.end && this.param.kegiatan.start != '' ? (this.param.kegiatan.end = this.param.kegiatan.start) : '';
           },
      },
      methods: {
           closeModal() {
+               this.toggleToast('Perubahan tidak disimpan', 'warning');
                this.$emit('close');
           },
 
@@ -128,21 +127,18 @@ export default {
                this.$emit('toast', { title, type });
           },
 
-          success(response) {
-               const jadwalStore = useJadwalStore();
-               jadwalStore.kegiatan[this.param.namaHari] = response.data.hari[this.param.namaHari];
-               this.toggleToast('Berhasil menambahkan kegiatan baru', 'success');
+          success() {
+               this.toggleToast('Berhasil Mengupdate', 'success');
                this.$emit('close');
                this.isloading = false;
           },
 
-          async tambahKegiatan() {
+          async simpanData() {
                this.isloading = true;
                try {
-                    const response = await axios.post('tambah-kegiatan', this.dataKegiatan, {
+                    const response = await axios.post('edit-kegiatan', Object.assign({}, this.param.kegiatan, this.dataJadwal), {
                          withCredentials: true,
                     });
-
                     if (response.data.errors) {
                          this.errors = response.data.errors.reduce(
                               (acc, error) => {
@@ -160,7 +156,7 @@ export default {
                     }
 
                     if (response.status == 200) {
-                         this.success(response);
+                         this.success();
                     } else if (response.status == 500) {
                          this.isloading = false;
                          this.toggleToast('Server sedang mengalami gangguan', 'error');
@@ -170,6 +166,14 @@ export default {
                     this.isloading = false;
                }
           },
+     },
+
+     created() {
+          const jadwalStore = useJadwalStore();
+          this.kelases = jadwalStore.kelas;
+          if (this.dataKegiatan != this.param.kegiatan) {
+               this.dataKegiatan = this.param.kegiatan;
+          }
      },
 };
 </script>

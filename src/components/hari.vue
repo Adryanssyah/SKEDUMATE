@@ -1,35 +1,44 @@
 <template>
-     <div class="w-full mb-8 pb-8 border-b-2 border-l-gray-100 dark:border-dark-2 overflow-y-auto">
+     <div class="w-full mb-8 pb-8 border-b-2 border-l-gray-100 dark:border-dark-2">
           <h3 class="font-medium text-2xl text-gray-500">{{ namaHari }}</h3>
-          <div class="flex flex-wrap gap-5 mt-8 cursor-pointer whitespace-nowrap">
-               <button
-                    v-if="kegiatanHari.length !== 0"
-                    v-for="kegiatan in kegiatanHari.sort((a, b) => a.start.localeCompare(b.start))"
-                    :key="kegiatan.title"
-                    class="group h-[43.2px] flex flex-col py-2 px-4 focus:h-auto rounded-md border-2"
-                    :class="getKelasWarna(kegiatan.kelas)"
+          <div class="flex flex-wrap gap-5 mt-8 pb-5 cursor-pointer whitespace-nowrap overflow-x-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200 dark:scrollbar-thumb-dark dark:scrollbar-track-dark-3">
+               <div
+                    v-for="(kegiatan, index) in kegiatanHari.sort((a, b) => a.start.localeCompare(b.start))"
+                    :key="kegiatan.id"
+                    :class="{ focused: index === focusedIndex }"
+                    tabindex="0"
+                    @focus.self="focusedIndex = index"
+                    @blur="focusedIndex = null"
+                    class="relative"
                >
-                    <div class="flex items-center">
-                         <span class="font-semibold">{{ kegiatan.start }} - {{ kegiatan.end }}</span>
-                         <span class="mx-4"> | </span>
-                         <span class="font-medium">{{ kegiatan.title }}</span>
+                    <div :class="getKelasWarna(kegiatan.kelas[0])" class="flex w-auto flex-col py-2 px-4 focus:h-auto rounded-md border-2">
+                         <div class="flex items-center">
+                              <transition
+                                   enter-active-class="transform transition duration-300 ease-custom"
+                                   enter-from-class="translate-x-1/2 scale-x-0 opacity-0"
+                                   leave-active-class="transform transition duration-300 ease-custom"
+                                   leave-to-class="translate-x-1/2 scale-x-0 opacity-0"
+                              >
+                                   <div v-if="index === focusedIndex" class="flex gap-4">
+                                        <button type="button" @click="toggleModal('ModalEditKegiatan', { kegiatan, dataJadwal })">
+                                             <i class="bi bi-pencil-fill cursor-pointer opacity-70 hover:opacity-100"></i>
+                                        </button>
+
+                                        <button type="button" @click="toggleModal('ModalHapus', { kegiatan, dataJadwal })">
+                                             <i class="bi bi-trash-fill cursor-pointer opacity-70 hover:opacity-100"></i>
+                                        </button>
+                                        <span v-if="index === focusedIndex" class="mr-4"> | </span>
+                                   </div>
+                              </transition>
+                              <span class="font-semibold">{{ kegiatan.start }} - {{ kegiatan.end }}</span>
+                              <span class="mx-4"> | </span>
+                              <span class="font-medium">{{ kegiatan.title }}</span>
+                         </div>
                     </div>
-                    <div class="hidden justify-between w-full items-center border-t border-gray-100 dark:border-gray-500 mt-4 pt-4 group-focus:flex">
-                         <div v-if="kegiatan.kelas != ''" class="flex flex-col items-start">
-                              <span class="text-xs mb-1">Kelas</span>
-                              <span class="font-medium">{{ kegiatan.kelas }}</span>
-                         </div>
-                         <div class="flex flex-col items-start">
-                              <span class="text-xs mb-1">Terakhir ubah</span>
-                              <span class="font-medium">Adryan</span>
-                         </div>
-                         <div>
-                              <i class="bi bi-three-dots-vertical text-xl cursor-pointer"></i>
-                         </div>
-                    </div>
-               </button>
+               </div>
+
                <button @click="toggleModal('ModalTambahHari', dataJadwal)" class="max-h-[43.2px] font-medium text-base border-2 dark:border-dark-2 dark:bg-dark-2 py-2 px-4 border-gray-300 rounded-md bg-gray-200">
-                    <i class="bi bi-plus-lg"></i> Tambah
+                    <i class="bi bi-plus-lg"></i> <span>Tambah</span>
                </button>
           </div>
      </div>
@@ -37,14 +46,43 @@
 
 <script>
 export default {
-     components: {},
      data() {
           return {
+               focusedIndex: null,
                dataJadwal: {
                     id: this.id,
                     namaHari: this.namaHari,
                },
+
+               newData: {
+                    title: '',
+               },
           };
+     },
+     mounted() {
+          document.addEventListener('click', this.handleOutsideClick);
+     },
+     beforeUnmount() {
+          document.removeEventListener('click', this.handleOutsideClick);
+     },
+
+     methods: {
+          handleOutsideClick(event) {
+               if (!event.target.closest('.group')) {
+                    this.focusedIndex = null;
+               }
+          },
+     },
+
+     methods: {
+          getKelasWarna(kelas) {
+               for (let i = 0; i < this.kelas.length; i++) {
+                    if (this.kelas[i].namaKelas === kelas) {
+                         return this.kelas[i].warna;
+                    }
+               }
+               return '';
+          },
      },
      props: {
           namaHari: {
@@ -68,17 +106,11 @@ export default {
                required: true,
           },
      },
-     methods: {
-          getKelasWarna(kelas) {
-               for (let i = 0; i < this.kelas.length; i++) {
-                    if (this.kelas[i].namaKelas === kelas) {
-                         return this.kelas[i].warna;
-                    }
-               }
-               return '';
-          },
-     },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.ease-custom {
+     transition-timing-function: cubic-bezier(0.61, -0.53, 0.43, 1.43);
+}
+</style>
