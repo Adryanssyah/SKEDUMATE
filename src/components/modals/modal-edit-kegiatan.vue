@@ -119,7 +119,6 @@ export default {
      },
      methods: {
           closeModal() {
-               this.toggleToast('Perubahan tidak disimpan', 'warning');
                this.$emit('close');
           },
 
@@ -174,6 +173,14 @@ export default {
           if (this.dataKegiatan != this.param.kegiatan) {
                this.dataKegiatan = this.param.kegiatan;
           }
+     },
+
+     mounted() {
+          document.documentElement.classList.add('overflow-hidden');
+     },
+     unmounted() {
+          document.documentElement.classList.remove('overflow-hidden');
+          this.toggleToast('Perubahan tidak disimpan', 'warning');
      },
 };
 </script>

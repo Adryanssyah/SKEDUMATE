@@ -2,16 +2,15 @@
      <div class="w-full mb-8 pb-8 border-b-2 border-l-gray-100 dark:border-dark-2">
           <h3 class="font-medium text-2xl text-gray-500">{{ namaHari }}</h3>
           <div class="flex flex-wrap gap-5 mt-8 pb-5 cursor-pointer whitespace-nowrap overflow-x-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200 dark:scrollbar-thumb-dark dark:scrollbar-track-dark-3">
-               <div
-                    v-for="(kegiatan, index) in kegiatanHari.sort((a, b) => a.start.localeCompare(b.start))"
-                    :key="kegiatan.id"
-                    :class="{ focused: index === focusedIndex }"
-                    tabindex="0"
-                    @focus.self="focusedIndex = index"
-                    @blur="focusedIndex = null"
-                    class="relative"
-               >
-                    <div :class="getKelasWarna(kegiatan.kelas[0])" class="flex w-auto flex-col py-2 px-4 focus:h-auto rounded-md border-2">
+               <div v-for="(kegiatan, index) in kegiatanHari.sort((a, b) => a.start.localeCompare(b.start))" :key="kegiatan.id" @click="focusedIndex = index" class="relative">
+                    <div
+                         v-closable="{
+                              exclude: ['modal'],
+                              handler: 'closeButton',
+                         }"
+                         :class="getKelasWarna(kegiatan.kelas[0])"
+                         class="flex w-auto flex-col py-2 px-4 focus:h-auto rounded-md border-2"
+                    >
                          <div class="flex items-center">
                               <transition
                                    enter-active-class="transform transition duration-300 ease-custom"
@@ -59,20 +58,6 @@ export default {
                },
           };
      },
-     mounted() {
-          document.addEventListener('click', this.handleOutsideClick);
-     },
-     beforeUnmount() {
-          document.removeEventListener('click', this.handleOutsideClick);
-     },
-
-     methods: {
-          handleOutsideClick(event) {
-               if (!event.target.closest('.group')) {
-                    this.focusedIndex = null;
-               }
-          },
-     },
 
      methods: {
           getKelasWarna(kelas) {
@@ -82,6 +67,10 @@ export default {
                     }
                }
                return '';
+          },
+
+          closeButton() {
+               this.focusedIndex = null;
           },
      },
      props: {
@@ -109,8 +98,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.ease-custom {
-     transition-timing-function: cubic-bezier(0.61, -0.53, 0.43, 1.43);
-}
-</style>
+<style scoped></style>

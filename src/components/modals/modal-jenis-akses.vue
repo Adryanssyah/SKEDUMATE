@@ -76,6 +76,12 @@ export default {
                this.$emit('close');
           },
      },
+     mounted() {
+          document.documentElement.classList.add('overflow-hidden');
+     },
+     unmounted() {
+          document.documentElement.classList.remove('overflow-hidden');
+     },
 };
 </script>
 

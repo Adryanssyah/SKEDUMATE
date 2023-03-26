@@ -11,7 +11,7 @@
                </div>
                <div class="text-center mt-2 text-gray-600 dark:text-gray-500 text-sm font-medium">Jika yakin klik tombol <span class="text-blue-400">Hapus</span>, klik <span class="text-blue-400">Batal</span> jika berubah piikiran</div>
                <div class="w-full mt-8 flex gap-3 justify-end">
-                    <button @click="closeModal" class="items-center bg-gray-400 dark:text-black text-white px-4 py-2 rounded-md flex gap-3">Batal</button>
+                    <span @click="closeModal" class="items-center cursor-pointer bg-gray-400 dark:text-black text-white px-4 py-2 rounded-md flex gap-3">Batal</span>
                     <button
                          type="submit"
                          :disabled="isloading"
@@ -54,10 +54,11 @@ export default {
           success(response) {
                const jadwalStore = useJadwalStore();
                jadwalStore.kegiatan[this.dataHapus.hari].kegiatan = response.data;
-               this.toggleToast('Berhasil Menghapus', 'success');
+               this.toggleToast('Berhasil menghapus kegiatan', 'success');
                this.$emit('close');
                this.isloading = false;
           },
+
           async hapus() {
                this.isloading = true;
                try {

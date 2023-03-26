@@ -38,21 +38,35 @@
                          <div class="text-red-500 text-xs flex mt-2 items-center" v-if="errors.namaKelas"><i class="bi bi-exclamation-circle-fill text-md mr-2"></i>{{ errors.pesan }}</div>
                     </div>
                     <div class="w-full grid grid-cols-2 gap-3">
-                         <div ref="node" @click="handleClick" class="relative min-h-[49.6px] flex items-center justify-center rounded-md border border-black dark:bg-dark-3 dark:text-gray-100 dark:border-gray-900 text-md">
-                              <div @click="handleClick" class="w-5 h-5 cursor-pointer rounded-full dark:border-gray-900 border-2" :class="[warna]"></div>
-                              <div v-if="isOpen && !isClickOutside" class="absolute top-14 bg-white border-black dark:bg-dark-3 dark:text-gray-100 dark:border-gray-900 z-50 shadow-md rounded-md border w-44 px-5">
-                                   <p class="text-gray-500 dark:text-gray-100 text-sm mt-3 mb-2">Pilih Warna</p>
-                                   <div class="grid grid-cols-4 gap-2 w-full border-t dark:border-gray-900 py-3">
-                                        <div v-for="(w, index) in daftarWarna" :key="index" class="flex">
-                                             <label class="border-2 w-7 h-7 rounded-full cursor-pointer" :class="[w]" :for="[w]"></label>
-                                             <input type="radio" :id="[w]" name="warna" :value="[w]" class="hidden" v-model="warna" />
-                                        </div>
-                                        <div class="flex">
-                                             <label class="border-2 border-black w-7 h-7 rounded-full cursor-pointer" for="default"></label>
-                                             <input type="radio" id="default" name="warna" value="border-black" class="hidden" v-model="warna" />
+                         <div class="relative min-h-[49.6px] flex items-center justify-center rounded-md border border-black dark:bg-dark-3 dark:text-gray-100 dark:border-gray-900 text-md">
+                              <div @click="pilihWarna = !pilihWarna" ref="warna" class="w-5 h-5 cursor-pointer rounded-full dark:border-gray-900 border-2" :class="[warna]"></div>
+                              <transition
+                                   enter-active-class="transform transition duration-300 ease-custom"
+                                   enter-from-class="-translate-y-1/2 scale-y-0 opacity-0"
+                                   leave-active-class="transform transition duration-300 ease-custom"
+                                   leave-to-class="-translate-y-1/2 scale-y-0 opacity-0"
+                              >
+                                   <div
+                                        v-if="pilihWarna"
+                                        v-closable="{
+                                             exclude: ['warna'],
+                                             handler: 'closePilih',
+                                        }"
+                                        class="absolute top-14 bg-white border-black dark:bg-dark-3 dark:text-gray-100 dark:border-gray-900 z-50 shadow-md rounded-md border w-44 px-5"
+                                   >
+                                        <p class="text-gray-500 dark:text-gray-100 text-sm mt-3 mb-2">Pilih Warna</p>
+                                        <div class="grid grid-cols-4 gap-2 w-full border-t dark:border-gray-900 py-3">
+                                             <div v-for="(w, index) in daftarWarna" :key="index" class="flex">
+                                                  <label class="border-2 w-7 h-7 rounded-full cursor-pointer" :class="[w]" :for="[w]"></label>
+                                                  <input type="radio" :id="[w]" name="warna" :value="[w]" class="hidden" v-model="warna" />
+                                             </div>
+                                             <div class="flex">
+                                                  <label class="border-2 border-black w-7 h-7 rounded-full cursor-pointer" for="default"></label>
+                                                  <input type="radio" id="default" name="warna" value="border-black" class="hidden" v-model="warna" />
+                                             </div>
                                         </div>
                                    </div>
-                              </div>
+                              </transition>
                          </div>
                          <div
                               @click="pushKelas"
@@ -84,8 +98,6 @@
 </template>
 
 <script>
-import { ref } from 'vue';
-import useClickOutside from '../../composables/element/detectOutside';
 import { useJadwalStore } from '../../stores/jadwal';
 import Spinner from '../loader/spiner.vue';
 import axios from 'axios';
@@ -128,8 +140,8 @@ export default {
                this.$emit('toast', { title, type });
           },
 
-          togglePilih() {
-               this.pilihWarna = !this.pilihWarna;
+          closePilih() {
+               this.pilihWarna = false;
           },
 
           hapusKelas(kelas) {
@@ -193,23 +205,8 @@ export default {
           },
      },
 
-     setup() {
-          const isOpen = ref(false);
-          const { node, isClickOutside } = useClickOutside();
-
-          const handleClick = () => {
-               isOpen.value = true;
-          };
-
-          return {
-               isOpen,
-               handleClick,
-               node,
-               isClickOutside,
-          };
-     },
-
      async mounted() {
+          document.documentElement.classList.add('overflow-hidden');
           try {
                const response = await axios.get('ambil-kelas/' + this.param, {
                     withCredentials: true,
@@ -224,6 +221,9 @@ export default {
           } catch (error) {
                console.error('error nih bro: ' + error);
           }
+     },
+     unmounted() {
+          document.documentElement.classList.remove('overflow-hidden');
      },
 };
 </script>

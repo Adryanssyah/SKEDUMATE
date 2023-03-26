@@ -61,6 +61,7 @@ export default {
      },
 
      async mounted() {
+          document.documentElement.classList.add('overflow-hidden');
           try {
                const response = await axios.get('jadwal-kosong/' + this.param, {
                     withCredentials: true,
@@ -78,6 +79,9 @@ export default {
           return {
                kelas,
           };
+     },
+     unmounted() {
+          document.documentElement.classList.remove('overflow-hidden');
      },
 };
 </script>

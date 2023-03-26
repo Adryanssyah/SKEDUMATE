@@ -1,14 +1,33 @@
 <template>
      <div v-if="jadwals !== null" class="w-full max-w-[1100px] py-10 flex px-5 xl:px-0">
-          <div class="w-full pr-0 transition-all duration-300" :class="{ 'md:pr-8': settingVisible }">
+          <div class="w-full pr-0" :class="{ 'md:pr-8': settingVisible }">
                <div class="flex justify-between items-center mb-10">
                     <h1 class="text-3xl font-semibold">{{ jadwals.nama_jadwal }}</h1>
                </div>
-               <div class="flex gap-3 flex-wrap whitespace-nowrap mb-10 justify-between">
+               <div class="relative flex gap-3 flex-wrap whitespace-nowrap mb-10 justify-between">
                     <div class="flex flex-wrap gap-3">
-                         <button class="group relative text-xs border-2 py-2 px-4 border-black dark:border-dark-2 dark:hover:bg-yellow-400 dark:bg-dark-2 rounded-md">
+                         <button
+                              ref="button"
+                              @click="toggleHariVisible = !toggleHariVisible"
+                              class="text-xs border-2 py-2 px-4 border-black dark:border-dark-2 dark:hover:bg-yellow-400 dark:bg-dark-2 rounded-md hover:bg-black hover:text-white"
+                         >
                               <span>Hari</span>
-                              <div class="absolute hidden group-focus:flex dark:bg-dark-2 dark:border-gray-900 flex-col gap-3 bg-white z-50 shadow-md top-10 left-0 border border-gray-200 px-6 py-5 rounded-md text-base font-medium">
+                         </button>
+
+                         <transition
+                              enter-active-class="transform transition duration-300 ease-custom"
+                              enter-from-class="-translate-y-1/2 scale-y-0 opacity-0"
+                              leave-active-class="transform transition duration-300 ease-custom"
+                              leave-to-class="-translate-y-1/2 scale-y-0 opacity-0"
+                         >
+                              <div
+                                   v-show="toggleHariVisible"
+                                   v-closable="{
+                                        exclude: ['button'],
+                                        handler: 'closeHari',
+                                   }"
+                                   class="absolute flex dark:bg-dark-2 dark:border-gray-900 flex-col gap-3 bg-white z-10 shadow-md top-12 left-0 border border-gray-200 px-6 py-5 rounded-md text-base font-medium"
+                              >
                                    <label v-for="(hari, key) in jadwals.hari" :key="key" :for="[key]" class="custom-label cursor-pointer flex items-center gap-3">
                                         <input type="checkbox" :id="[key]" class="hidden" v-model="hari.visible" />
                                         <span class="w-5 h-5 border border-black dark:border-yellow-400 dark:bg-yellow-400 rounded flex justify-center items-center custom-check text-white">
@@ -17,7 +36,7 @@
                                         <span>{{ key }}</span>
                                    </label>
                               </div>
-                         </button>
+                         </transition>
 
                          <button class="text-xs border-2 py-2 px-4 border-black dark:border-dark-2 dark:hover:bg-yellow-400 dark:bg-dark-2 rounded-md hover:bg-black hover:text-white" @click="toggleModal('ModalJadwalKosong', id)">
                               Jadwal Kosong
@@ -101,6 +120,7 @@ export default {
                     type: '',
                },
                settingVisible: false,
+               toggleHariVisible: false,
           };
      },
      watch: {
@@ -120,6 +140,10 @@ export default {
                this.toast.visible = true;
                this.toast.title = title;
                this.toast.type = type;
+          },
+
+          closeHari() {
+               this.toggleHariVisible = false;
           },
 
           closeToast() {
@@ -164,11 +188,15 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .custom-label input:checked + .custom-check {
      background-color: black;
 }
 .custom-label input:checked + .custom-check i {
      display: block !important;
+}
+
+.ease-custom {
+     transition-timing-function: cubic-bezier(0.61, -0.53, 0.43, 1.43);
 }
 </style>

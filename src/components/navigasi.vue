@@ -1,38 +1,39 @@
 <template>
      <div class="w-full dark:bg-dark flex justify-center py-10 px-5">
           <nav class="bg-white px-2 sm:px-4 py-2.5 dark:bg-dark fixed w-full z-20 -top-0 left-0 border-b border-gray-200 dark:border-dark-2">
-               <div class="container max-w-[1100px] flex flex-wrap items-center justify-between mx-auto">
+               <div class="container relative max-w-[1100px] flex flex-wrap items-center justify-between mx-auto">
                     <router-link :to="{ name: 'Home' }" class="flex items-center">
                          <img v-if="isLightMode" src="../assets/logo/l-logo.png" class="h-6 w-full mr-3 sm:h-9" alt="Skedumate" />
                          <img v-if="!isLightMode" src="../assets/logo/d-logo.png" class="h-6 w-full mr-3 sm:h-9" alt="Skedumate" />
                     </router-link>
                     <div class="flex flex-wrap items-center justify-between gap-10">
                          <div class="flex items-center order-3" v-if="userStore.isAuthenticated">
-                              <button
-                                   type="button"
-                                   class="group relative w-9 h-9 flex justify-center items-center text-white text-center cursor-pointer rounded-full"
-                                   id="user-menu-button"
-                                   aria-expanded="false"
-                                   data-dropdown-toggle="user-dropdown"
-                                   data-dropdown-placement="bottom"
-                                   :class="[tema]"
-                                   v-show="userStore.isAuthenticated"
-                              >
+                              <button ref="trigger" @click="menuVisible = !menuVisible" type="button" class="group w-9 h-9 flex justify-center items-center text-white text-center cursor-pointer rounded-full" :class="[tema]">
                                    <div class="text-sm uppercase">{{ initials }}</div>
-                                   <span class="sr-only">Open user menu</span>
                               </button>
 
-                              <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-dark-2 dark:divide-gray-600" id="user-dropdown">
-                                   <div class="px-4 py-3">
-                                        <span class="block text-sm text-gray-900 dark:text-white">{{ namaLengkap }}</span>
-                                        <span class="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">{{ email }}</span>
+                              <transition
+                                   enter-active-class="transform transition duration-200 ease-custom"
+                                   enter-from-class="-translate-y-1/2 translate-x-1/2 scale-y-0 scale-x-0 opacity-0"
+                                   leave-active-class="transform transition duration-200 ease-custom"
+                                   leave-to-class="-translate-y-1/2 translate-x-1/2 scale-y-0 scale-x-0 opacity-0"
+                              >
+                                   <div
+                                        v-if="menuVisible"
+                                        v-closable="{ exclude: ['trigger'], handler: 'closeMenu' }"
+                                        class="z-10 absolute top-10 right-0 text-start my-4 text-base bg-white divide-y divide-gray-100 rounded-lg border border-gray-300 dark:border-none shadow-lg dark:bg-dark-2 dark:divide-gray-600"
+                                   >
+                                        <div class="px-4 py-3">
+                                             <span class="block text-sm text-gray-900 dark:text-white">{{ namaLengkap }}</span>
+                                             <span class="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">{{ email }}</span>
+                                        </div>
+                                        <ul class="py-2">
+                                             <li>
+                                                  <span @click="logout" class="block cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</span>
+                                             </li>
+                                        </ul>
                                    </div>
-                                   <ul class="py-2" aria-labelledby="user-menu-button">
-                                        <li>
-                                             <span @click="logout" class="block cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</span>
-                                        </li>
-                                   </ul>
-                              </div>
+                              </transition>
 
                               <button
                                    data-collapse-toggle="mobile-menu-2"
@@ -84,15 +85,11 @@
      </div>
 </template>
 
-<script setup>
-import axios from 'axios';
+<script>
 import { useUserStore } from '../stores/user';
 import { useJadwalStore } from '../stores/jadwal';
+import axios from 'axios';
 import Toggle from '../components/toggle/dark.vue';
-const userStore = useUserStore();
-</script>
-
-<script>
 export default {
      name: 'navigasi',
      data() {
@@ -102,12 +99,16 @@ export default {
                initials: '',
                tema: '',
                isLightMode: true,
+               menuVisible: false,
           };
      },
      components: {
           Toggle,
      },
      methods: {
+          closeMenu() {
+               this.menuVisible = false;
+          },
           async logout() {
                const sessionId = 'logout';
                try {
@@ -118,15 +119,18 @@ export default {
                               withCredentials: true,
                          }
                     );
-                    const userStore = useUserStore();
-                    const jadwalStore = useJadwalStore();
-                    userStore.$reset();
-                    jadwalStore.$reset();
-                    this.$router.push({ name: 'Home' });
+                    if (response) {
+                         const userStore = useUserStore();
+                         const jadwalStore = useJadwalStore();
+                         userStore.$reset();
+                         jadwalStore.$reset();
+                         this.$router.push({ name: 'Home' });
+                    }
                } catch (error) {
                     console.error(error);
                }
           },
+
           upperCaseFirtsLetter(text) {
                return text.charAt(0).toUpperCase() + text.slice(1);
           },
@@ -145,6 +149,13 @@ export default {
                : '';
 
           localStorage.getItem('isLightMode') ? (this.isLightMode = true) : (this.isLightMode = false);
+     },
+
+     setup() {
+          const userStore = useUserStore();
+          return {
+               userStore,
+          };
      },
 };
 </script>
