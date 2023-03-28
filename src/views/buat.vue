@@ -79,6 +79,7 @@
 <script>
 import ModalTambahHari from '../components/modals/modal-tambah-hari.vue';
 import ModalEditKegiatan from '../components/modals/modal-edit-kegiatan.vue';
+import ModalDetail from '../components/modals/modal-detail.vue';
 import ModalKelasifikasi from '../components/modals/modal-kelasifikasi.vue';
 import ModalJadwalKosong from '../components/modals/modal-jadwal-kosong.vue';
 import ModalAnggota from '../components/modals/modal-anggota.vue';
@@ -98,6 +99,7 @@ export default {
           Hari,
           Setting,
           ModalHapus,
+          ModalDetail,
           ModalTambahHari,
           ModalEditKegiatan,
           ModalKelasifikasi,

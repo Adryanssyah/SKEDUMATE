@@ -1,12 +1,14 @@
 <template>
-     <div class="bg-white w-full mx-2 max-w-[450px] dark:bg-dark-2 p-8 rounded-md flex flex-col">
+     <form @submit.prevent="tambahKegiatan" class="bg-white w-full max-h-full mx-2 max-w-[490px] dark:bg-dark-2 p-8 rounded-md flex flex-col">
           <div class="flex items-center justify-between mb-8">
                <h3 class="font-medium text-xl">Kegiatan</h3>
                <span class="cursor-pointer" @click="closeModal">
                     <i class="bi bi-x-lg"></i>
                </span>
           </div>
-          <form @submit.prevent="tambahKegiatan" class="flex flex-col gap-5">
+          <div
+               class="flex flex-col gap-5 overflow-y-auto px-1 pb-1 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200 dark:scrollbar-thumb-dark dark:scrollbar-track-dark-3 scrollbar-thumb-rounded-full scrollbar-track-rounded-full"
+          >
                <div class="w-full flex justify-end">
                     hari <strong class="ml-1">{{ param.namaHari }}</strong>
                </div>
@@ -72,42 +74,68 @@
                          <input @change="pilihKelas" class="hidden" type="radio" name="kelas" :id="[item.namaKelas]" :value="[item.namaKelas]" v-model="dataKegiatan.kelas" />
                     </label>
                </div>
-               <div class="w-full mt-6 flex justify-end">
-                    <button
-                         type="submit"
-                         :disabled="isloading"
-                         :class="{ 'bg-black dark:bg-yellow-400 dark:text-black text-white': !isloading, 'bg-gray-400 dark:bg-gray-600 dark:text-black text-white cursor-not-allowed': isloading }"
-                         class="px-4 py-2 rounded-md flex gap-3"
+
+               <div class="mt-3 flex justify-between cursor-pointer" @click="toggleDeskripsi">
+                    <span class="font-medium text-gray-500">Deskripsi </span>
+                    <div
+                         class="transition-transform duration-500"
+                         :class="{
+                              'transform rotate-0': deskripsiVisible,
+                              'transform -rotate-180': !deskripsiVisible,
+                         }"
                     >
-                         <span>{{ isloading ? 'Meyimpan ...' : 'Simpan' }}</span> <i v-if="!isloading" class="bi bi-arrow-right ml-2"></i>
-                    </button>
+                         <i class="bi bi-chevron-up"></i>
+                    </div>
                </div>
-          </form>
-     </div>
+               <transition
+                    enter-active-class="transform transition duration-300 ease-custom"
+                    enter-from-class="-translate-y-1/2 scale-y-0 opacity-0"
+                    leave-active-class="transform transition duration-300 ease-custom"
+                    leave-to-class="-translate-y-1/2 scale-y-0 opacity-0"
+               >
+                    <div v-if="deskripsiVisible">
+                         <textarea
+                              rows="4"
+                              class="block rounded-md py-4 px-6 w-full text-sm dark:bg-dark-3 dark:text-gray-100 dark:border-gray-900 text-md"
+                              placeholder="Tuliskan deskripsi kegiatan disini..."
+                              v-model="dataKegiatan.deskripsi"
+                         ></textarea>
+                    </div>
+               </transition>
+          </div>
+          <div class="w-full mt-8 flex justify-end">
+               <button
+                    type="submit"
+                    :disabled="isloading"
+                    :class="{ 'bg-black dark:bg-yellow-400 dark:text-black text-white': !isloading, 'bg-gray-400 dark:bg-gray-600 dark:text-black text-white cursor-not-allowed': isloading }"
+                    class="px-4 py-2 rounded-md flex gap-3"
+               >
+                    <span>{{ isloading ? 'Meyimpan ...' : 'Simpan' }}</span> <i v-if="!isloading" class="bi bi-arrow-right ml-2"></i>
+               </button>
+          </div>
+     </form>
 </template>
 
-<script setup>
-import { useJadwalStore } from '../../stores/jadwal';
-import { computed } from 'vue';
-const jadwalStore = useJadwalStore();
-const kelases = computed(() => jadwalStore.kelas);
-</script>
+<script setup></script>
 
 <script>
+import { computed } from 'vue';
 import { useJadwalStore } from '../../stores/jadwal';
+import { useUserStore } from '../../stores/user';
 import axios from 'axios';
 export default {
      name: 'modal-tambah-hari',
      props: ['param'],
      data() {
           return {
-               dataKegiatan: { _id: this.param.id, start: '', end: '', title: '', kelas: '', hari: this.param.namaHari },
+               dataKegiatan: { _id: this.param.id, start: '', end: '', title: '', kelas: '', deskripsi: '', hari: this.param.namaHari, maker: this.userStore.user.id, editor: this.userStore.user.id },
                errors: {
                     title: '',
                     start: '',
                     end: '',
                },
                isloading: false,
+               deskripsiVisible: false,
           };
      },
 
@@ -122,6 +150,10 @@ export default {
      methods: {
           closeModal() {
                this.$emit('close');
+          },
+
+          toggleDeskripsi() {
+               this.deskripsiVisible = !this.deskripsiVisible;
           },
 
           toggleToast(title, type) {
@@ -160,6 +192,7 @@ export default {
                     }
 
                     if (response.status == 200) {
+                         console.log(response.data);
                          this.success(response);
                     } else if (response.status == 500) {
                          this.isloading = false;
@@ -176,6 +209,17 @@ export default {
      },
      unmounted() {
           document.documentElement.classList.remove('overflow-hidden');
+     },
+
+     setup() {
+          const jadwalStore = useJadwalStore();
+          const userStore = useUserStore();
+          const kelases = computed(() => jadwalStore.kelas);
+          return {
+               userStore,
+               jadwalStore,
+               kelases,
+          };
      },
 };
 </script>

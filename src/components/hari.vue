@@ -1,11 +1,11 @@
 <template>
      <div class="w-full mb-8 pb-8 border-b-2 border-l-gray-100 dark:border-dark-2">
           <h3 class="font-medium text-2xl text-gray-500">{{ namaHari }}</h3>
-          <div class="flex flex-wrap gap-5 mt-8 pb-5 cursor-pointer whitespace-nowrap overflow-x-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200 dark:scrollbar-thumb-dark dark:scrollbar-track-dark-3">
-               <div v-for="(kegiatan, index) in kegiatanHari.sort((a, b) => a.start.localeCompare(b.start))" :key="kegiatan.id" @click="focusedIndex = index" class="relative">
+          <div ref="container" class="flex flex-wrap gap-5 mt-8 pb-5 cursor-pointer whitespace-nowrap overflow-x-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200 dark:scrollbar-thumb-dark dark:scrollbar-track-dark-3">
+               <div v-for="(kegiatan, id) in kegiatanHari.sort((a, b) => a.start.localeCompare(b.start))" :key="kegiatan.id" @click="focusedIndex = kegiatan.id" class="relative">
                     <div
                          v-closable="{
-                              exclude: ['modal'],
+                              exclude: ['container'],
                               handler: 'closeButton',
                          }"
                          :class="getKelasWarna(kegiatan.kelas[0])"
@@ -18,7 +18,11 @@
                                    leave-active-class="transform transition duration-300 ease-custom"
                                    leave-to-class="translate-x-1/2 scale-x-0 opacity-0"
                               >
-                                   <div v-if="index === focusedIndex" class="flex gap-4">
+                                   <div v-if="kegiatan.id === focusedIndex" class="flex gap-4">
+                                        <button type="button" @click="toggleModal('ModalDetail', { kegiatan, dataJadwal })">
+                                             <i class="bi bi-eye-fill cursor-pointer opacity-70 hover:opacity-100"></i>
+                                        </button>
+
                                         <button type="button" @click="toggleModal('ModalEditKegiatan', { kegiatan, dataJadwal })">
                                              <i class="bi bi-pencil-fill cursor-pointer opacity-70 hover:opacity-100"></i>
                                         </button>
@@ -26,7 +30,8 @@
                                         <button type="button" @click="toggleModal('ModalHapus', { kegiatan, dataJadwal })">
                                              <i class="bi bi-trash-fill cursor-pointer opacity-70 hover:opacity-100"></i>
                                         </button>
-                                        <span v-if="index === focusedIndex" class="mr-4"> | </span>
+
+                                        <span v-if="kegiatan.id === focusedIndex" class="mr-4"> | </span>
                                    </div>
                               </transition>
                               <span class="font-semibold">{{ kegiatan.start }} - {{ kegiatan.end }}</span>
@@ -73,6 +78,7 @@ export default {
                this.focusedIndex = null;
           },
      },
+
      props: {
           namaHari: {
                type: String,
