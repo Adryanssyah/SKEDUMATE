@@ -50,7 +50,7 @@
                <div class="text-red-500 text-xs mt-2 flex items-center" v-if="errors.password !== '' && jenis == 'public'"><i class="bi bi-exclamation-circle-fill text-md mr-2"></i> {{ errors.password }}</div>
                <div class="w-full mt-6 flex justify-between">
                     <button class="px-4">Bagikan</button>
-                    <button type="submit" class="bg-black dark:bg-yellow-400 dark:text-black text-white px-4 py-2 rounded-md">Buat <i class="bi bi-arrow-right ml-2"></i></button>
+                    <button type="submit" class="bg-black dark:bg-yellow-400 dark:text-black text-white px-4 py-2 rounded-md">Simpan <i class="bi bi-arrow-right ml-2"></i></button>
                </div>
           </form>
      </div>
@@ -59,12 +59,14 @@
 <script>
 export default {
      name: 'modal-jenis-akses',
+     props: ['param'],
      data() {
           return {
-               userId: '',
-               nama_jadwal: '',
-               jenis: 'private',
-               password: '',
+               _id: this.param_id,
+               userId: this.param.pemilik,
+               nama_jadwal: this.param.nama_jadwal,
+               jenis: this.param.jenis,
+               password: this.param.password,
                errors: {
                     nama_jadwal: '',
                     password: '',

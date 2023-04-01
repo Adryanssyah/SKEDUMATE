@@ -3,7 +3,8 @@ import { createPinia } from 'pinia';
 
 import App from './App.vue';
 import router from './router';
-
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import './dist/output.css';
 import './assets/custom.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -22,6 +23,7 @@ app.use(createPinia());
 
 async function startApp() {
      await load();
+     AOS.init();
      app.use(router);
      app.mount('#app');
 }

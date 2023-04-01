@@ -62,11 +62,11 @@
                </div>
           </div>
 
-          <Setting :settingVisible="settingVisible" :toggleModal="toggleModal" @setting="closeSetting" :id="jadwals._id" :kelas="jadwals.kelas" />
+          <Setting :settingVisible="settingVisible" :toggleModal="toggleModal" @setting="closeSetting" :id="jadwals._id" :kelas="jadwals.kelas" :dataAkses="dataAkses" />
 
           <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" enter-active-class="transition-all duration-300" leave-active-class="transition-all duration-300" name="modal-backdrop">
                <div v-show="showModal" class="fixed top-0 left-0 w-full py-5 h-full bg-black bg-opacity-70 flex justify-center items-center z-50" @click.self="closeModal">
-                    <Transition enter-active-class="transition-all duration-300 " leave-active-class="transition-all duration-300 " enter-from-class="transform scale-0" leave-to-class="transform scale-0" name="modal">
+                    <Transition enter-active-class="transition-all duration-300" leave-active-class="transition-all duration-300" enter-from-class="transform scale-0" leave-to-class="transform scale-0" name="modal">
                          <component v-if="showModal" :is="currentModal" :param="param" @close="closeModal" @reload="loadData" @toast="toggleToast"></component>
                     </Transition>
                </div>
@@ -123,6 +123,7 @@ export default {
                },
                settingVisible: false,
                toggleHariVisible: false,
+               dataAkses: ref(null),
           };
      },
      watch: {
@@ -168,6 +169,10 @@ export default {
                const { loadDetail, schedule } = getJadwalDetail(this.id);
                await loadDetail();
                this.jadwals = schedule;
+
+               const { hari, __v, ...dataAkses } = this.jadwals;
+               this.dataAkses = dataAkses;
+
                const jadwalStore = useJadwalStore();
                jadwalStore.kelas = this.jadwals.kelas;
                jadwalStore.kegiatan = this.jadwals.hari;

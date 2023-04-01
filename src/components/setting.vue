@@ -15,7 +15,7 @@
                <div
                     v-if="settingVisible"
                     :class="{
-                         'md:w-full md:pl-8 md:border-l-2 md:border-l-gray-300 md:dark:border-dark-2 md:sticky md:top-10 hidden md:block': !mobile,
+                         'md:w-full md:pl-8 md:border-l-2 md:border-l-gray-300 md:dark:border-dark-2 md:sticky md:top-24 hidden md:block': !mobile,
                          'bg-white relative w-full mx-2 dark:bg-dark p-8  rounded-md max-h-full': mobile,
                     }"
                >
@@ -26,12 +26,12 @@
                          </span>
                     </div>
                     <div :class="{ 'overflow-y-auto w-full pb-10 max-h-[500px]': mobile }">
-                         <h4 class="font-medium text-gray-400">Jenis Akses</h4>
-                         <div class="my-4">
+                         <h4 v-if="pemilikStore === dataAkses.pemilik" class="font-medium text-gray-400">Jenis Akses</h4>
+                         <div v-if="pemilikStore === dataAkses.pemilik" class="my-4">
                               <i class="bi bi-person-fill text-2xl mr-3"></i>
                               <span class="font-medium text-lg">Kelola Bersama</span>
                               <button
-                                   @click="toggleModal('ModalJenisAkses', null)"
+                                   @click="toggleModal('ModalJenisAkses', dataAkses)"
                                    class="w-full text-base border-2 py-2 border-black dark:border-dark-2 dark:hover:bg-yellow-400 dark:bg-dark-2 rounded-md mt-7 hover:bg-black hover:text-white"
                               >
                                    Ubah jenis akses
@@ -40,7 +40,10 @@
                          <h4 class="font-medium text-gray-400 mt-8">Anggota</h4>
                          <div class="my-4">
                               <span class="font-medium text-base">Adryan, budi, richard ani ... +8</span>
-                              <button @click="toggleModal('ModalAnggota', null)" class="w-full text-base border-2 py-2 border-black dark:border-dark-2 dark:hover:bg-yellow-400 dark:bg-dark-2 rounded-md mt-7 hover:bg-black hover:text-white">
+                              <button
+                                   @click="toggleModal('ModalAnggota', dataAkses)"
+                                   class="w-full text-base border-2 py-2 border-black dark:border-dark-2 dark:hover:bg-yellow-400 dark:bg-dark-2 rounded-md mt-7 hover:bg-black hover:text-white"
+                              >
                                    Kelola Anggota
                               </button>
                          </div>
@@ -64,14 +67,12 @@
      </div>
 </template>
 
-<script setup>
-import { useJadwalStore } from '../stores/jadwal';
-import { computed } from 'vue';
-const jadwalStore = useJadwalStore();
-const kelas = computed(() => jadwalStore.kelas);
-</script>
+<script setup></script>
 
 <script>
+import { useJadwalStore } from '../stores/jadwal';
+import { useUserStore } from '../stores/user';
+import { computed } from 'vue';
 export default {
      name: 'setting',
      props: {
@@ -85,6 +86,10 @@ export default {
           },
           settingVisible: {
                type: Boolean,
+               required: true,
+          },
+          dataAkses: {
+               type: Object,
                required: true,
           },
      },
@@ -113,6 +118,16 @@ export default {
           toggleSetting() {
                this.$emit('setting');
           },
+     },
+     setup() {
+          const jadwalStore = useJadwalStore();
+          const userStore = useUserStore();
+          const kelas = computed(() => jadwalStore.kelas);
+          const pemilikStore = userStore.user.id;
+          return {
+               pemilikStore,
+               kelas,
+          };
      },
 };
 </script>

@@ -115,7 +115,7 @@ export default {
                     namaKelas: false,
                     pesan: '',
                },
-               daftarWarna: ['red', 'blue', 'yellow', 'green', 'orange', 'purple', 'rose', 'pink', 'teal', 'indigo'],
+               daftarWarna: ['red', 'blue', 'yellow', 'green', 'orange', 'purple', 'gray', 'pink', 'teal', 'indigo'],
                warna: 'border-black',
                pilihWarna: false,
                loading: true,

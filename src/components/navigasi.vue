@@ -3,12 +3,12 @@
           <nav class="bg-white px-2 sm:px-4 py-2.5 dark:bg-dark fixed w-full z-20 -top-0 left-0 border-b border-gray-200 dark:border-dark-2">
                <div class="container relative max-w-[1100px] flex flex-wrap items-center justify-between mx-auto">
                     <router-link :to="{ name: 'Home' }" class="flex items-center">
-                         <img v-if="isLightMode" src="../assets/logo/l-logo.png" class="h-6 w-full mr-3 sm:h-9" alt="Skedumate" />
-                         <img v-if="!isLightMode" src="../assets/logo/d-logo.png" class="h-6 w-full mr-3 sm:h-9" alt="Skedumate" />
+                         <img v-if="isLightMode" src="../assets/logo/light.webp" class="h-6 w-full mr-3 sm:h-9" alt="Skedumate" />
+                         <img v-if="!isLightMode" src="../assets/logo/dark.webp" class="h-6 w-full mr-3 sm:h-9" alt="Skedumate" />
                     </router-link>
                     <div class="flex flex-wrap items-center justify-between gap-10">
                          <div class="flex items-center order-3" v-if="userStore.isAuthenticated">
-                              <button ref="trigger" @click="menuVisible = !menuVisible" type="button" class="group w-9 h-9 flex justify-center items-center text-white text-center cursor-pointer rounded-full" :class="[tema]">
+                              <button ref="trigger" @click="menuVisible = !menuVisible" type="button" class="group w-9 h-9 flex justify-center items-center text-white dark:text-black text-center cursor-pointer rounded-full" :class="[tema]">
                                    <div class="text-sm uppercase">{{ initials }}</div>
                               </button>
 

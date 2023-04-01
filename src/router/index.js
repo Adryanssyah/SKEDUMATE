@@ -7,7 +7,7 @@ import Buat from '../views/buat.vue';
 import Join from '../views/join.vue';
 
 import { useUserStore } from '../stores/user';
-import checkSession from '../composables/checkSession';
+import checkAnggota from '../composables/checkAnggota';
 
 const router = createRouter({
      history: createWebHistory(import.meta.env.BASE_URL),
@@ -79,6 +79,23 @@ router.beforeEach(async (to, from, next) => {
                return next(from);
           } else {
                next();
+          }
+     } else if (to.name === 'Buat' && requiresAuth) {
+          if (requiresAuth && !userStore.isAuthenticated) {
+               document.title = `${from.meta.title + ' - Skedumate'}`;
+               return next({
+                    name: 'Login',
+               });
+          } else {
+               const { load } = checkAnggota(to.params.id);
+               const anggota = await load();
+               if (!anggota.permision) {
+                    document.title = `${from.meta.title + ' - Skedumate'}`;
+                    return next({ name: 'Join' });
+               } else {
+                    userStore.role = anggota.role;
+                    next();
+               }
           }
      } else if (requiresAuth) {
           if (requiresAuth && !userStore.isAuthenticated) {

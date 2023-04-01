@@ -166,6 +166,7 @@ export default {
           success(response) {
                const jadwalStore = useJadwalStore();
                jadwalStore.kegiatan[this.param.dataJadwal.namaHari] = response.data;
+               this.dataKegiatan = JSON.parse(JSON.stringify(this.param.kegiatan));
                this.toggleToast('Berhasil Mengupdate', 'success');
                this.$emit('close');
                this.isloading = false;

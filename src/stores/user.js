@@ -7,9 +7,9 @@ export const useUserStore = defineStore({
           user: null,
           initials: '',
           theme: '',
+          role: '',
      }),
 
-     actions: {},
      getters: {
           setInitials() {
                if (this.user) {
