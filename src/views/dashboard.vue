@@ -68,20 +68,10 @@ export default {
                this.showModal = false;
           },
      },
-     async created() {
+     async mounted() {
           const { loadJadwal } = getJadwal();
-          const jadwalStore = useJadwalStore();
-          if (jadwalStore.jadwal === null) {
-               this.jadwals = await loadJadwal();
-          } else {
-               this.jadwals = jadwalStore.jadwal;
-          }
-
-          watchEffect(() => {
-               if (this.jadwals.value !== null) {
-                    this.loading = false;
-               }
-          });
+          this.jadwals = await loadJadwal();
+          this.loading = false;
      },
 };
 </script>

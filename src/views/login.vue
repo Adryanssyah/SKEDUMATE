@@ -42,7 +42,6 @@
 
 <script>
 import axios from 'axios';
-import Cookies from 'js-cookie';
 import { useUserStore } from '../stores/user';
 import checkSession from '../composables/checkSession';
 import getJadwal from '../composables/getJadwal';

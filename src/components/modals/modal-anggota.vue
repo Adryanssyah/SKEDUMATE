@@ -10,11 +10,24 @@
           <div v-if="!loading" class="flex flex-col gap-5">
                <div v-if="filteredAnggota('Pemilik').length > 0" class="w-full border-b dark:border-dark">
                     <h5>Pemilik</h5>
-                    <div class="flex flex-wrap gap-3 py-5">
-                         <div v-for="peserta in filteredAnggota('Pemilik')" :key="peserta.userId" class="rounded-md border dark:border-gray-500 border-gray-400 flex gap-4 px-3 py-3 justify-between items-center text-sm cursor-pointer">
-                              <div class="w-8 h-8 flex justify-center items-center text-black text-center cursor-pointer rounded-full uppercase" :class="[peserta.tema]">{{ peserta.initials }}</div>
-                              <span class="capitalize">{{ peserta.namaDepan }} {{ peserta.namaBelakang }}</span>
-                              <i v-if="peserta.userId === userId" title="Saya" class="bi bi-person-fill"></i>
+                    <div ref="btn" class="flex flex-wrap gap-3 py-5">
+                         <div class="relative" v-for="peserta in filteredAnggota('Pemilik')" :key="peserta.userId">
+                              <div @click="focusedIndex = peserta.userId" class="rounded-md border dark:border-gray-500 border-gray-400 flex gap-4 px-3 py-3 justify-between items-center text-sm cursor-pointer">
+                                   <div class="w-8 h-8 flex justify-center items-center text-black dark:text-white text-xs text-center cursor-pointer rounded-full uppercase" :class="[peserta.tema]">{{ peserta.initials }}</div>
+                                   <span class="capitalize">{{ peserta.namaDepan }} {{ peserta.namaBelakang }}</span>
+                                   <i v-if="peserta.userId === userId" title="Saya" class="bi bi-person-fill"></i>
+                              </div>
+
+                              <div
+                                   v-closable="{
+                                        exclude: ['btn'],
+                                        handler: 'closeButton',
+                                   }"
+                                   v-if="peserta.userId === focusedIndex"
+                                   class="absolute top-0 -right-32 border dark:border-dark-2 py-3 px-6 bg-white dark:bg-dark-3 shadow-lg rounded-md text-sm cursor-pointer"
+                              >
+                                   <span class="opacity-100 hover:opacity-80 active:opacity-70">Lorem, ipsum.</span>
+                              </div>
                          </div>
                     </div>
                </div>
@@ -22,7 +35,7 @@
                     <h5>Editor</h5>
                     <div class="flex flex-wrap gap-3 py-5">
                          <div v-for="peserta in filteredAnggota('Editor')" :key="peserta.userId" class="rounded-md border dark:border-gray-500 border-gray-400 flex gap-4 px-3 py-3 justify-between items-center text-sm cursor-pointer">
-                              <div class="w-8 h-8 flex justify-center items-center text-black text-center cursor-pointer rounded-full uppercase" :class="[peserta.tema]">{{ peserta.initials }}</div>
+                              <div class="w-8 h-8 flex justify-center items-center text-black dark:text-white text-xs text-center cursor-pointer rounded-full uppercase" :class="[peserta.tema]">{{ peserta.initials }}</div>
                               <span class="capitalize">{{ peserta.namaDepan }} {{ peserta.namaBelakang }}</span>
                               <i v-if="peserta.userId === userId" title="Saya" class="bi bi-person-fill"></i>
                          </div>
@@ -32,7 +45,7 @@
                     <h5>Anggota</h5>
                     <div class="flex flex-wrap gap-3 py-5">
                          <div v-for="peserta in filteredAnggota('Anggota')" :key="peserta.userId" class="rounded-md border dark:border-gray-500 border-gray-400 flex gap-4 px-3 py-3 justify-between items-center text-sm cursor-pointer">
-                              <div class="w-8 h-8 flex justify-center items-center text-black text-center cursor-pointer rounded-full uppercase" :class="[peserta.tema]">{{ peserta.initials }}</div>
+                              <div class="w-8 h-8 flex justify-center items-center text-black dark:text-white text-xs text-center cursor-pointer rounded-full uppercase" :class="[peserta.tema]">{{ peserta.initials }}</div>
                               <span class="capitalize">{{ peserta.namaDepan }} {{ peserta.namaBelakang }}</span>
                               <i v-if="peserta.userId === userId" title="Saya" class="bi bi-person-fill"></i>
                          </div>
@@ -58,6 +71,7 @@ export default {
      },
      data() {
           return {
+               focusedIndex: null,
                anggota: '',
                anggotaFinal: null,
                loading: true,
@@ -81,6 +95,9 @@ export default {
                               initials: anggotaFinal.initials,
                          };
                     });
+          },
+          closeButton() {
+               this.focusedIndex = null;
           },
      },
 

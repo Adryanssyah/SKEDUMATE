@@ -57,8 +57,8 @@
 
 <script>
 import { useUserStore } from '../../stores/user';
-import getJadwal from '../../composables/getJadwal';
 import axios from 'axios';
+import updateJadwal from '../../composables/updateJadwal';
 export default {
      name: 'modal-buat',
      data() {
@@ -79,7 +79,6 @@ export default {
           },
 
           async buatJadwal() {
-               const { loadJadwal } = getJadwal();
                try {
                     const response = await axios.post(
                          `tambah-jadwal`,
@@ -93,8 +92,10 @@ export default {
                               withCredentials: true,
                          }
                     );
+
                     if (response.status == 201) {
-                         loadJadwal();
+                         const { loadUpdate } = updateJadwal();
+                         await loadUpdate();
                          this.$emit('update', response.data.jadwal);
                          this.$router.push({ name: 'Buat', params: { id: response.data.jadwal.custom_id } });
                     } else if (response.data.errors) {

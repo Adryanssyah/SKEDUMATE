@@ -45,10 +45,6 @@ export default {
                this.checkRoute();
           },
      },
-     mounted() {
-          const { loadJadwal } = getJadwal();
-          loadJadwal();
-     },
 };
 </script>
 

@@ -8,7 +8,7 @@
                     </router-link>
                     <div class="flex flex-wrap items-center justify-between gap-10">
                          <div class="flex items-center order-3" v-if="userStore.isAuthenticated">
-                              <button ref="trigger" @click="menuVisible = !menuVisible" type="button" class="group w-9 h-9 flex justify-center items-center text-white dark:text-black text-center cursor-pointer rounded-full" :class="[tema]">
+                              <button ref="trigger" @click="menuVisible = !menuVisible" type="button" class="group w-9 h-9 flex justify-center items-center text-black dark:text-white text-center cursor-pointer rounded-full" :class="[tema]">
                                    <div class="text-sm uppercase">{{ initials }}</div>
                               </button>
 

@@ -7,11 +7,13 @@ const getJadwal = () => {
           const userStore = useUserStore();
           const jadwalStore = useJadwalStore();
           try {
-               const response = await axios.get('ambil-semua-jadwal/' + userStore.user.id, {
+               const response = await axios.post('ambil-semua-jadwal', userStore.user.jadwal, {
                     withCredentials: true,
                });
-               jadwalStore.jadwal = response.data;
-               return response.data;
+               if (response.status == 200) {
+                    jadwalStore.jadwal = response.data;
+                    return response.data;
+               }
           } catch (error) {}
      };
 

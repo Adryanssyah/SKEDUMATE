@@ -58,12 +58,14 @@ const router = createRouter({
                props: true,
           },
           {
-               path: '/gabung',
+               path: '/gabung/:id',
                name: 'Join',
                component: Join,
                meta: {
                     title: 'Gabung',
+                    requiresAuth: true,
                },
+               props: true,
           },
      ],
 });
@@ -80,22 +82,30 @@ router.beforeEach(async (to, from, next) => {
           } else {
                next();
           }
-     } else if (to.name === 'Buat' && requiresAuth) {
-          if (requiresAuth && !userStore.isAuthenticated) {
+     } else if (requiresAuth && !userStore.isAuthenticated) {
+          document.title = `${from.meta.title + ' - Skedumate'}`;
+          return next({
+               name: 'Login',
+          });
+     } else if (to.name === 'Buat') {
+          const { load } = checkAnggota(to.params.id);
+          const anggota = await load();
+          if (!anggota.permision) {
                document.title = `${from.meta.title + ' - Skedumate'}`;
-               return next({
-                    name: 'Login',
-               });
+               next({ name: 'Join', params: { id: to.params.id } });
           } else {
-               const { load } = checkAnggota(to.params.id);
-               const anggota = await load();
-               if (!anggota.permision) {
-                    document.title = `${from.meta.title + ' - Skedumate'}`;
-                    return next({ name: 'Join' });
-               } else {
-                    userStore.role = anggota.role;
-                    next();
-               }
+               userStore.role = anggota.role;
+               next();
+          }
+     } else if (to.name === 'Join') {
+          const { load } = checkAnggota(to.params.id);
+          const anggota = await load();
+          if (anggota.permision) {
+               userStore.role = anggota.role;
+               next({ name: 'Buat', params: { id: to.params.id } });
+          } else {
+               document.title = `${to.meta.title + ' - Skedumate'}`;
+               next();
           }
      } else if (requiresAuth) {
           if (requiresAuth && !userStore.isAuthenticated) {
