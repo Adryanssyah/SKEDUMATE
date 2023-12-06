@@ -90,9 +90,12 @@ router.beforeEach(async (to, from, next) => {
      } else if (to.name === 'Buat') {
           const { load } = checkAnggota(to.params.id);
           const anggota = await load();
-          if (!anggota.permision) {
+          if (!anggota.permision && anggota.jenis === 'public') {
                document.title = `${from.meta.title + ' - Skedumate'}`;
                next({ name: 'Join', params: { id: to.params.id } });
+          } else if (!anggota.permision && anggota.jenis === 'private') {
+               document.title = `${to.meta.title + ' - Skedumate'}`;
+               next({ name: 'Dashboard' });
           } else {
                userStore.role = anggota.role;
                next();
@@ -100,9 +103,12 @@ router.beforeEach(async (to, from, next) => {
      } else if (to.name === 'Join') {
           const { load } = checkAnggota(to.params.id);
           const anggota = await load();
-          if (anggota.permision) {
+          if (anggota.permision && anggota.jenis === 'public') {
                userStore.role = anggota.role;
                next({ name: 'Buat', params: { id: to.params.id } });
+          } else if (anggota.jenis === 'private') {
+               document.title = `${to.meta.title + ' - Skedumate'}`;
+               next({ name: 'Dashboard' });
           } else {
                document.title = `${to.meta.title + ' - Skedumate'}`;
                next();

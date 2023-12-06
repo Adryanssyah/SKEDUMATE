@@ -4,6 +4,7 @@
                <h1 class="font-medium text-3xl text-center mb-2">{{ jadwals.nama_jadwal }}</h1>
 
                <div class="flex gap-1 items-end flex-wrap justify-center px-5">
+                    <i class="bi bi-people-fill mr-1"></i>
                     <span v-for="(item, index) in anggota.slice(0, max)" :key="index" class="capitalize">
                          {{ item.namaDepan }}
                          <span v-if="index !== anggota.slice(0, max).length - 1 && index !== anggota.slice(0, max).length - 2">,</span>
@@ -16,11 +17,14 @@
                     :class="{ 'border-red-500': errors.error && password == '', 'border-gray-400 dark:border-gray-900': !errors.error && password != '' }"
                     type="password"
                     placeholder="Password"
+                    @input="limitInput"
                     v-model="password"
                />
                <div class="text-red-500 text-xs -mt-6 flex items-center" v-if="errors.error && password == ''"><i class="bi bi-exclamation-circle-fill text-md mr-2"></i> {{ errors.msg }}</div>
                <div class="">
-                    <button type="submit" class="bg-black dark:bg-yellow-400 dark:text-black text-white px-4 py-2 rounded-md text-lg">Gabung <i class="bi bi-arrow-right ml-2"></i></button>
+                    <button type="submit" :disabled="isLoading" :class="{ 'bg-gray-800 animate-pulse cursor-not-allowed': isLoading }" class="bg-black text-white px-4 py-2 rounded-md text-lg dark:bg-yellow-400 dark:text-black">
+                         Gabung <i class="bi bi-arrow-right ml-2"></i>
+                    </button>
                </div>
           </div>
      </form>
@@ -45,6 +49,7 @@ export default {
                     error: false,
                     msg: '',
                },
+               isLoading: false,
           };
      },
      methods: {
@@ -73,7 +78,15 @@ export default {
                }
           },
 
+          limitInput() {
+               this.password = this.password.replace(/[^0-9]/g, '');
+               if (this.password.length > 8) {
+                    this.password = this.inputValue.substr(0, 8);
+               }
+          },
+
           async gabung() {
+               this.isLoading = true;
                const userStore = useUserStore();
                const parameter = {
                     _id: this.jadwals._id,
@@ -84,12 +97,13 @@ export default {
                     withCredentials: true,
                });
 
-               if (!response.data.error) {
-                    console.log('Berhasil');
+               if (response.status == 200) {
+                    this.$router.push({ name: 'Buat', params: { id: this.id } });
+                    this.isLoading = false;
                } else {
                     this.errors = response.data;
                     this.password = '';
-                    console.log(this.errors);
+                    this.isLoading = false;
                }
           },
      },

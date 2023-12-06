@@ -6,10 +6,12 @@
                     <h2 class="font-medium text-xl">Terakhir dilihat</h2>
                     <button @click="toggleModal('ModalBuat')" class="bg-black dark:bg-yellow-400 dark:text-black text-white px-4 py-2 rounded-md">Buat <i class="bi bi-arrow-right ml-2"></i></button>
                </div>
+
                <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-5 grid-cols-1">
                     <Card v-for="(jadwal, index) in jadwals" :key="jadwal.custom_id" :jadwal="jadwal" />
                </div>
           </div>
+
           <div v-if="jadwals.length == 0" class="py-[13%] w-full max-w-[1100px] flex flex-col justify-center items-center text-center gap-2">
                <h2 class="font-medium text-2xl">Kamu belum memiliki jadwal.</h2>
                <p class="text-gray-400 font-medium">Klik tombol di bawah untuk memulai</p>

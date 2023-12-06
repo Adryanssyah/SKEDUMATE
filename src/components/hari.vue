@@ -1,6 +1,6 @@
 <template>
      <div class="w-full mb-8 pb-8 border-b-2 border-l-gray-100 dark:border-dark-2">
-          <h3 class="font-medium text-2xl text-gray-500">{{ namaHari }}</h3>
+          <span class="font-medium text-2xl text-gray-500">{{ namaHari }}</span>
           <div ref="container" class="flex flex-wrap gap-5 mt-8 pb-5 cursor-pointer whitespace-nowrap overflow-x-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200 dark:scrollbar-thumb-dark dark:scrollbar-track-dark-3">
                <div v-for="(kegiatan, id) in kegiatanHari.sort((a, b) => a.start.localeCompare(b.start))" :key="kegiatan.id" @click="focusedIndex = kegiatan.id" class="relative">
                     <div
@@ -41,7 +41,11 @@
                     </div>
                </div>
 
-               <button @click="toggleModal('ModalTambahHari', dataJadwal)" class="max-h-[43.2px] font-medium text-base border-2 dark:border-dark-2 dark:bg-dark-2 py-2 px-4 border-gray-300 rounded-md bg-gray-200">
+               <button
+                    v-if="userRole !== 'Anggota'"
+                    @click="toggleModal('ModalTambahHari', dataJadwal)"
+                    class="max-h-[43.2px] font-medium text-base border-2 dark:border-dark-2 dark:bg-dark-2 py-2 px-4 border-gray-300 rounded-md bg-gray-200"
+               >
                     <i class="bi bi-plus-lg"></i> <span>Tambah</span>
                </button>
           </div>
@@ -49,6 +53,7 @@
 </template>
 
 <script>
+import { useUserStore } from '../stores/user';
 export default {
      data() {
           return {
@@ -100,6 +105,13 @@ export default {
                type: String,
                required: true,
           },
+     },
+     setup() {
+          const userStore = useUserStore();
+          const userRole = userStore.role;
+          return {
+               userRole,
+          };
      },
 };
 </script>

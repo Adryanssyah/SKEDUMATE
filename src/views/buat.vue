@@ -7,6 +7,7 @@
                <div class="relative flex gap-3 flex-wrap whitespace-nowrap mb-10 justify-between">
                     <div class="flex flex-wrap gap-3">
                          <button
+                              v-if="userRole !== 'Anggota'"
                               ref="button"
                               @click="toggleHariVisible = !toggleHariVisible"
                               class="text-xs border-2 py-2 px-4 border-black dark:border-dark-2 dark:hover:bg-yellow-400 dark:bg-dark-2 rounded-md hover:bg-black hover:text-white"
@@ -21,7 +22,7 @@
                               leave-to-class="-translate-y-1/2 scale-y-0 opacity-0"
                          >
                               <div
-                                   v-show="toggleHariVisible"
+                                   v-show="toggleHariVisible && userRole !== 'Anggota'"
                                    v-closable="{
                                         exclude: ['button'],
                                         handler: 'closeHari',
@@ -49,6 +50,7 @@
                                    @click="toggleSetting"
                                    data-tooltip-target="tooltip-btn-setting"
                                    data-tooltip-placement="bottom"
+                                   aria-label="Toggle Setting"
                                    class="relative text-xs border-2 py-2 px-4 border-black dark:border-dark-2 dark:hover:bg-yellow-400 dark:bg-dark-2 rounded-md hover:bg-black hover:text-white"
                               >
                                    <i class="bi bi-gear-fill"></i>
@@ -92,6 +94,7 @@ import getJadwalDetail from '../composables/getJadwalDetail';
 import Toast from '../components/alert/toast.vue';
 import { ref, computed } from 'vue';
 import { useJadwalStore } from '../stores/jadwal';
+import { useUserStore } from '../stores/user';
 export default {
      name: 'Buat',
      props: ['id'],
@@ -185,9 +188,12 @@ export default {
 
      setup() {
           const jadwalStore = useJadwalStore();
+          const userStore = useUserStore();
           const kegiatan = computed(() => jadwalStore.kegiatan);
           const kelas = computed(() => jadwalStore.kelas);
+          const userRole = userStore.role;
           return {
+               userRole,
                kegiatan,
                kelas,
           };
