@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const checkSession = () => {
      const load = async () => {
+          console.log(import.meta.env.VITE_BASE_URL_API);
           try {
                const response = await axios.get(
                     'checkSession',
