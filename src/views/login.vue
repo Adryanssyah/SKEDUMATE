@@ -30,8 +30,13 @@
                     <div class="text-red-500 text-xs -mt-2 flex items-center" v-if="errors.password !== ''"><i class="bi bi-exclamation-circle-fill text-md mr-2"></i> {{ errors.password }}</div>
                </div>
                <div class="py-4">
-                    <button type="submit" :disabled="isLoading" :class="{ 'bg-gray-800 animate-pulse cursor-not-allowed': isLoading }" class="bg-black text-white px-4 py-2 rounded-md text-lg dark:bg-yellow-400 dark:text-black">
-                         Masuk <i class="bi bi-arrow-right ml-2"></i>
+                    <button
+                         type="submit"
+                         :disabled="isLoading"
+                         :class="{ 'bg-black dark:bg-yellow-400 dark:text-black text-white': !isLoading, 'bg-gray-400 dark:bg-gray-600 dark:text-black text-white cursor-not-allowed': isLoading }"
+                         class="px-4 py-2 rounded-md flex gap-3"
+                    >
+                         <span>{{ isLoading ? 'Tunggu...' : 'Masuk' }}</span> <i v-if="!isLoading" class="bi bi-arrow-right ml-2"></i>
                     </button>
                </div>
                <div class="dark:text-gray-300">Belum punya akun? <router-link :to="{ name: 'Daftar' }" class="underline font-bold dark:text-white">Daftar</router-link></div>
