@@ -1,5 +1,5 @@
 <template>
-     <div v-if="jadwals !== null" class="w-full max-w-[1100px] py-10 flex px-5 xl:px-0">
+     <div v-if="jadwals !== null && !loading" class="w-full max-w-[1100px] py-10 flex px-5 xl:px-0">
           <div class="w-full pr-0" :class="{ 'md:pr-8': settingVisible }">
                <div class="flex justify-between items-center mb-10">
                     <h1 class="text-3xl font-semibold">{{ jadwals.nama_jadwal }}</h1>
@@ -74,7 +74,9 @@
                </div>
           </Transition>
      </div>
-
+     <div v-if="loading" class="loading w-full text-center">
+          <Spinner />
+     </div>
      <Toast @toast="closeToast" :toast="toast" />
 </template>
 
@@ -92,6 +94,7 @@ import Setting from '../components/setting.vue';
 import Tooltip from '../components/tooltip/tooltip.vue';
 import getJadwalDetail from '../composables/getJadwalDetail';
 import Toast from '../components/alert/toast.vue';
+import Spinner from '@/components/loader/spiner.vue';
 import { ref, computed } from 'vue';
 import { useJadwalStore } from '../stores/jadwal';
 import { useUserStore } from '../stores/user';
@@ -111,6 +114,7 @@ export default {
           ModalJenisAkses,
           Tooltip,
           Toast,
+          Spinner,
      },
      data() {
           return {
@@ -127,6 +131,7 @@ export default {
                settingVisible: false,
                toggleHariVisible: false,
                dataAkses: ref(null),
+               loading: true,
           };
      },
      watch: {
@@ -179,6 +184,7 @@ export default {
                const jadwalStore = useJadwalStore();
                jadwalStore.kelas = this.jadwals.kelas;
                jadwalStore.kegiatan = this.jadwals.hari;
+               this.loading = false;
           },
      },
 
@@ -201,7 +207,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .custom-label input:checked + .custom-check {
      background-color: black;
 }
@@ -211,5 +217,9 @@ export default {
 
 .ease-custom {
      transition-timing-function: cubic-bezier(0.61, -0.53, 0.43, 1.43);
+}
+
+.loading {
+     margin-top: 200px;
 }
 </style>
