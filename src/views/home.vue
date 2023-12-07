@@ -1,7 +1,7 @@
 <template>
      <div class="w-full dark:bg-dark dark:text-white flex justify-center px-5">
           <div class="w-full max-w-[1100px] flex flex-col">
-               <section class="grid grid-cols-1 lg:grid-cols-2 gap-5 my-20">
+               <section class="section grid grid-cols-1 lg:grid-cols-2 gap-5">
                     <div class="order-last lg:order-first flex flex-col items-center lg:items-start justify-center px-10 lg:px-0">
                          <h1 data-aos="fade-down" class="font-bold lg:text-center text-5xl lg:text-7xl">Skedumate</h1>
                          <h2 data-aos="fade-up" class="font-regular text-center lg:text-start text-lg lg:text-xl my-8">Kolaborasi jadwal seru dan asyik, hanya dengan Skedumate.</h2>
@@ -63,4 +63,14 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.section {
+     padding-bottom: 100px;
+}
+
+@media (min-width: 1024px) {
+     .section {
+          padding-top: 100px;
+     }
+}
+</style>

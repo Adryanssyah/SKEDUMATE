@@ -3,8 +3,9 @@
           <nav class="bg-white px-2 sm:px-4 py-2.5 dark:bg-dark fixed w-full z-20 -top-0 left-0 border-b border-gray-200 dark:border-dark-2">
                <div class="container relative max-w-[1100px] flex flex-wrap items-center justify-between mx-auto">
                     <router-link :to="{ name: 'Home' }" class="flex items-center">
-                         <img v-if="isLightMode" src="../assets/logo/light.webp" class="h-9 w-auto" alt="Skedumate" />
-                         <img v-if="!isLightMode" src="../assets/logo/dark.webp" class="h-9 w-auto" alt="Skedumate" />
+                         <img src="@/assets/logo/logo.webp" class="h-9 w-full md:hidden" alt="Skedumate" />
+                         <img v-if="isLightMode" src="@/assets/logo/light.webp" class="h-9 w-full hidden md:block" alt="Skedumate" />
+                         <img v-if="!isLightMode" src="@/assets/logo/dark.webp" class="h-9 w-full hidden md:block" alt="Skedumate" />
                     </router-link>
                     <div class="flex items-center md:order-2 space-x-1 md:space-x-0 rtl:space-x-reverse gap-5">
                          <button
