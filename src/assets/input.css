@@ -6,6 +6,9 @@
      h1 {
           @apply line-clamp-2;
      }
+     html {
+          -webkit-tap-highlight-color: transparent;
+     }
 }
 
 @layer components {
