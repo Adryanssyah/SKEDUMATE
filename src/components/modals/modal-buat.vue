@@ -49,7 +49,14 @@
                />
                <div class="text-red-500 text-xs mt-2 flex items-center" v-if="errors.password !== '' && jenis == 'public'"><i class="bi bi-exclamation-circle-fill text-md mr-2"></i> {{ errors.password }}</div>
                <div class="w-full mt-6 flex justify-end">
-                    <button type="submit" class="bg-black dark:bg-yellow-400 dark:text-black text-white px-4 py-2 rounded-md">Buat <i class="bi bi-arrow-right ml-2"></i></button>
+                    <button
+                         type="submit"
+                         :disabled="isLoading"
+                         :class="{ 'bg-black dark:bg-yellow-400 dark:text-black text-white': !isLoading, 'bg-gray-400 dark:bg-gray-600 dark:text-black text-white cursor-not-allowed': isLoading }"
+                         class="px-4 py-2 rounded-md flex gap-3"
+                    >
+                         <span>{{ isLoading ? 'Tunggu...' : 'Buat' }}</span> <i v-if="!isLoading" class="bi bi-arrow-right ml-2"></i>
+                    </button>
                </div>
           </form>
      </div>
@@ -71,6 +78,7 @@ export default {
                     nama_jadwal: '',
                     password: '',
                },
+               isLoading: false,
           };
      },
      methods: {
@@ -79,6 +87,7 @@ export default {
           },
 
           async buatJadwal() {
+               this.isLoading = true;
                try {
                     const response = await axios.post(
                          `tambah-jadwal`,
@@ -97,11 +106,13 @@ export default {
                          const { loadUpdate } = updateJadwal();
                          await loadUpdate();
                          this.$emit('update', response.data.jadwal);
+                         this.isLoading = false;
                          this.$router.push({ name: 'Buat', params: { id: response.data.jadwal.custom_id } });
                     } else if (response.data.errors) {
                          this.errors = response.data.errors.reduce(
                               (acc, error) => {
                                    acc[error.param] = error.msg;
+
                                    return acc;
                               },
                               {
@@ -109,6 +120,7 @@ export default {
                                    password: '',
                               }
                          );
+                         this.isLoading = false;
                          return this.errors;
                     }
                } catch (error) {
@@ -119,6 +131,7 @@ export default {
                          console.error(error);
                     }
                }
+               this.isLoading = false;
           },
           limitInput() {
                this.password = this.password.replace(/[^0-9]/g, '');

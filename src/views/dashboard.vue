@@ -18,8 +18,9 @@
                <button @click="toggleModal('ModalBuat')" class="bg-black dark:bg-yellow-400 dark:text-black text-white px-4 py-2 mt-4 rounded-md">Buat <i class="bi bi-arrow-right ml-2"></i></button>
           </div>
      </div>
-     <div class="w-full flex flex-col justify-center items-center px-5">
-          <Loader v-if="loading" />
+
+     <div v-if="loading" class="loading w-full text-center py-28">
+          <Spinner />
      </div>
 
      <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" enter-active-class="transition-all duration-300" leave-active-class="transition-all duration-300" name="modal-backdrop">
@@ -34,20 +35,18 @@
 </template>
 
 <script>
-import Card from '../components/cards/d-card.vue';
-import Loader from '../components/loader/skeleton.vue';
-import ModalBuat from '../components/modals/modal-buat.vue';
+import Card from '@/components/cards/d-card.vue';
+import Spinner from '../components/loader/spiner.vue';
+import ModalBuat from '@/components/modals/modal-buat.vue';
 import getJadwal from '../composables/getJadwal';
-import { useJadwalStore } from '../stores/jadwal';
 import { ref } from 'vue';
-import { watchEffect } from 'vue';
 
 export default {
      name: 'dashboard',
      components: {
           Card,
           ModalBuat,
-          Loader,
+          Spinner,
      },
      data() {
           return {
@@ -78,4 +77,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.loading {
+     margin-top: 200px;
+}
+</style>

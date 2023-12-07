@@ -1,4 +1,5 @@
 <template>
+     <Announce></Announce>
      <AppHeader v-if="!authPage" />
      <router-view />
      <AppFooter v-if="!authPage" />
@@ -19,12 +20,14 @@ if (userStore.isAuthenticated) {
 <script>
 import AppHeader from './components/navigasi.vue';
 import AppFooter from './components/footer.vue';
+import Announce from '@/components/alert/announce.vue';
 
 export default {
      name: 'app',
      components: {
           AppHeader,
           AppFooter,
+          Announce,
      },
      data() {
           return {

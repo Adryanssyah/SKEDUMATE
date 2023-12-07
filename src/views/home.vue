@@ -9,8 +9,8 @@
                               <router-link :to="{ name: 'Login' }" class="bg-black dark:bg-yellow-400 dark:text-black text-white px-4 py-2 rounded-md">Mulai Sekarang <i class="bi bi-arrow-right ml-2"></i></router-link>
                          </div>
                     </div>
-                    <div data-aos="fade-left" class="flex justify-center items-center lg:justify-end">
-                         <img src="../assets/img/hero2.webp" alt="" class="w-[320px] lg:w-[420px] h-full" />
+                    <div class="flex justify-center items-center lg:justify-end">
+                         <img src="../assets/img/hero2.webp" alt="gambar jam" data-aos="fade-up" class="w-[320px] lg:w-[420px] h-full" />
                     </div>
                </section>
           </div>

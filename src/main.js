@@ -23,7 +23,9 @@ app.use(createPinia());
 
 async function startApp() {
      await load();
-     AOS.init();
+     AOS.init({
+          once: true,
+     });
      app.use(router);
      app.mount('#app');
 }

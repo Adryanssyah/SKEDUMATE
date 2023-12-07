@@ -3,13 +3,14 @@
           <nav class="bg-white px-2 sm:px-4 py-2.5 dark:bg-dark fixed w-full z-20 -top-0 left-0 border-b border-gray-200 dark:border-dark-2">
                <div class="container relative max-w-[1100px] flex flex-wrap items-center justify-between mx-auto">
                     <router-link :to="{ name: 'Home' }" class="flex items-center">
-                         <img v-if="isLightMode" src="../assets/logo/light.webp" class="h-9 w-full" alt="Skedumate" />
-                         <img v-if="!isLightMode" src="../assets/logo/dark.webp" class="h-9 w-full" alt="Skedumate" />
+                         <img v-if="isLightMode" src="../assets/logo/light.webp" class="h-9 w-auto" alt="Skedumate" />
+                         <img v-if="!isLightMode" src="../assets/logo/dark.webp" class="h-9 w-auto" alt="Skedumate" />
                     </router-link>
                     <div class="flex items-center md:order-2 space-x-1 md:space-x-0 rtl:space-x-reverse gap-5">
                          <button
                               ref="trigger"
                               @click="menuVisible = !menuVisible"
+                              v-if="userStore.isAuthenticated"
                               type="button"
                               class="group w-9 h-9 flex justify-center items-center dark:text-white text-center cursor-pointer rounded-full bg-black text-white dark:bg-dark-3"
                          >
@@ -23,7 +24,7 @@
                               leave-to-class="-translate-y-1/2 translate-x-1/2 scale-y-0 scale-x-0 opacity-0"
                          >
                               <div
-                                   v-if="menuVisible"
+                                   v-if="menuVisible && userStore.isAuthenticated"
                                    v-closable="{ exclude: ['trigger'], handler: 'closeMenu' }"
                                    class="z-10 absolute top-10 right-0 text-start my-4 text-base bg-white divide-y divide-gray-100 rounded-lg border border-gray-300 dark:border-none shadow-lg dark:bg-dark-2 dark:divide-gray-600"
                               >
