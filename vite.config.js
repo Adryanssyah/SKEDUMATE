@@ -12,11 +12,15 @@ export default defineConfig({
           vueJsx(),
           VitePWA({
                manifest: {
+                    name: 'Skedumate',
+                    short_name: 'Skedu',
+                    description: 'Kolaborasi untuk kelola jadwal',
+                    theme_color: '#1c1c1c',
                     icons: [
                          {
-                              src: '/logo.webp',
+                              src: '/logo.png',
                               sizes: '512x512',
-                              type: 'image/webp',
+                              type: 'image/png',
                               purpose: 'any maskable',
                          },
                     ],
