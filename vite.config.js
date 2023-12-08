@@ -13,14 +13,14 @@ export default defineConfig({
           VitePWA({
                manifest: {
                     name: 'Skedumate',
-                    short_name: 'Skedu',
+                    short_name: 'Skedumate',
                     description: 'Kolaborasi untuk kelola jadwal',
                     theme_color: '#1c1c1c',
                     icons: [
                          {
-                              src: '/logo.png',
+                              src: '/logo.webp',
                               sizes: '512x512',
-                              type: 'image/png',
+                              type: 'image/webp',
                               purpose: 'any maskable',
                          },
                     ],
