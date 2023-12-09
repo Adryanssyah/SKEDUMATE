@@ -4,7 +4,7 @@
                <div class="flex flex-col items-center justify-center gap-7 md:flex-row md:justify-between md:items-center py-6">
                     <a href="https://adryansportfolio.vercel.app/" target="_blank" class="font-medium dark:text-gray-400 dark:hover:text-white text-gray-600 hover:text-black text-sm">© 2023 Adryans</a>
                     <div class="text-lg flex gap-5">
-                         <a class="dark:text-gray-400 dark:hover:text-white text-gray-500 hover:text-black" href="https://www.linkedin.com/in/muhammad-adryan-9322281a8/" target="_blank" aria-label="Kunjungi LinkedIn Saya">
+                         <a class="dark:text-gray-400 dark:hover:text-white text-gray-500 hover:text-black" href="https://www.linkedin.com/in/adryansyah24/" target="_blank" aria-label="Kunjungi LinkedIn Saya">
                               <i class="bi bi-linkedin"></i
                          ></a>
                          <a class="dark:text-gray-400 dark:hover:text-white text-gray-500 hover:text-black" href="https://instagram.com/_adryans" target="_blank" aria-label="Kunjungi Instagram Saya"> <i class="bi bi-instagram"></i></a>

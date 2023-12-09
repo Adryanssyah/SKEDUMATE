@@ -5,6 +5,7 @@ import Daftar from '../views/daftar.vue';
 import Dashboard from '../views/dashboard.vue';
 import Buat from '../views/buat.vue';
 import Join from '../views/join.vue';
+import NotFound from '@/views/notFound.vue';
 
 import { useUserStore } from '../stores/user';
 import checkAnggota from '../composables/checkAnggota';
@@ -73,6 +74,14 @@ const router = createRouter({
                     requiresAuth: true,
                },
                props: true,
+          },
+          {
+               path: '/:pathMatch(.*)*',
+               name: 'NotFound',
+               component: NotFound,
+               meta: {
+                    title: 'Page Not Found',
+               },
           },
      ],
 });
