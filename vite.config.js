@@ -25,20 +25,6 @@ export default defineConfig({
                          },
                     ],
                },
-               workbox: {
-                    runtimeCaching: [
-                         {
-                              urlPattern: /^https:\/\/skedumate-server\.vercel\.app\//,
-                              handler: 'CacheFirst',
-                              options: {
-                                   cacheName: 'skedumate-cache',
-                                   cacheableResponse: {
-                                        statuses: [0, 200],
-                                   },
-                              },
-                         },
-                    ],
-               },
           }),
      ],
      resolve: {
